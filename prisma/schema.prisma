@@ -1,0 +1,64 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // Uncomment and set DIRECT_URL for Neon's non-pooled connection (migrations only):
+  // directUrl = env("DIRECT_URL")
+}
+
+model MenuSection {
+  id         String         @id @default(cuid())
+  slug       String         @unique
+  title      Json
+  sortOrder  Int            @default(0)
+  isActive   Boolean        @default(true)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  categories MenuCategory[]
+}
+
+model MenuCategory {
+  id        String     @id @default(cuid())
+  sectionId String
+  section   MenuSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  slug      String
+  title     Json
+  sortOrder Int        @default(0)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  items     MenuItem[]
+
+  @@unique([sectionId, slug])
+}
+
+model MenuItem {
+  id          String       @id @default(cuid())
+  categoryId  String
+  category    MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  slug        String
+  name        Json
+  imageUrl    String?
+  price       Int?
+  sortOrder   Int          @default(0)
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([categoryId, slug])
+}
+
+/// Pre-built, locale-resolved snapshot of the full menu.
+/// The public page reads one row here instead of doing relational joins.
+model MenuSnapshot {
+  id        String   @id @default(cuid())
+  locale    String   @unique
+  data      Json
+  updatedAt DateTime @updatedAt
+}

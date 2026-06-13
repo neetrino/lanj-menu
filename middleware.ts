@@ -1,22 +1,21 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-// Relative import: Edge middleware on Vercel does not resolve `@/` path aliases.
-import { locales, defaultLocale } from './src/lib/i18n/config';
+
+/** Keep in sync with `src/lib/i18n/config.ts` — inlined for Edge runtime compatibility. */
+const LOCALES = ['hy', 'ru', 'en'] as const;
+const DEFAULT_LOCALE = LOCALES[0];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith('/api/')) {
-    return NextResponse.next();
-  }
-
-  const pathnameHasLocale = locales.some(
+  const pathnameHasLocale = LOCALES.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   );
 
   if (!pathnameHasLocale) {
     const url = request.nextUrl.clone();
-    url.pathname = `/${defaultLocale}${pathname}`;
+    const suffix = pathname === '/' ? '' : pathname;
+    url.pathname = `/${DEFAULT_LOCALE}${suffix}`;
     return NextResponse.redirect(url);
   }
 
@@ -25,7 +24,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Run on all paths except Next.js internals and static assets
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
+    // Skip API routes, Next internals, and static assets
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
   ],
 };

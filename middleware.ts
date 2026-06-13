@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { locales, defaultLocale } from '@/lib/i18n/config';
+// Relative import: Edge middleware on Vercel does not resolve `@/` path aliases.
+import { locales, defaultLocale } from './src/lib/i18n/config';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

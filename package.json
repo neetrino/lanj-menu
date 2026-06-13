@@ -12,6 +12,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "db:push": "prisma db push",
+    "db:seed": "node scripts/seed-menu-structure.mjs",
+    "db:restore-menu": "node scripts/restore-real-menu-items.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {

@@ -4,6 +4,7 @@ import crypto from 'node:crypto';
 import dotenv from 'dotenv';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { PrismaClient } from '@prisma/client';
+import { rebuildMenuSnapshots } from './rebuild-menu-snapshots.mjs';
 
 const envPath = path.resolve(process.cwd(), '.env');
 const envResult = dotenv.config({ path: envPath, override: true });
@@ -46,66 +47,6 @@ function contentTypeFromExt(ext) {
   if (ext === 'png') return 'image/png';
   if (ext === 'webp') return 'image/webp';
   return 'application/octet-stream';
-}
-
-async function rebuildSnapshots(prisma) {
-  const sections = await prisma.menuSection.findMany({
-    include: {
-      categories: {
-        include: { items: true },
-      },
-    },
-  });
-
-  const locales = ['hy', 'ru', 'en'];
-  for (const locale of locales) {
-    const payload = {
-      sections: sections
-        .filter((s) => s.isActive)
-        .sort((a, b) => a.sortOrder - b.sortOrder)
-        .map((section) => ({
-          slug: section.slug,
-          title:
-            section.title?.[locale] ??
-            section.title?.hy ??
-            section.title?.en ??
-            Object.values(section.title ?? {})[0] ??
-            '',
-          categories: section.categories
-            .filter((c) => c.isActive)
-            .sort((a, b) => a.sortOrder - b.sortOrder)
-            .map((category) => ({
-              slug: category.slug,
-              title:
-                category.title?.[locale] ??
-                category.title?.hy ??
-                category.title?.en ??
-                Object.values(category.title ?? {})[0] ??
-                '',
-              items: category.items
-                .filter((i) => i.isActive)
-                .sort((a, b) => a.sortOrder - b.sortOrder)
-                .map((item) => ({
-                  slug: item.slug,
-                  name:
-                    item.name?.[locale] ??
-                    item.name?.hy ??
-                    item.name?.en ??
-                    Object.values(item.name ?? {})[0] ??
-                    '',
-                  imageUrl: item.imageUrl,
-                  price: item.price,
-                })),
-            })),
-        })),
-    };
-
-    await prisma.menuSnapshot.upsert({
-      where: { locale },
-      update: { data: payload },
-      create: { locale, data: payload },
-    });
-  }
 }
 
 async function main() {
@@ -162,26 +103,34 @@ async function main() {
   const prisma = new PrismaClient({ datasources: { db: { url: databaseUrl } } });
   try {
     const section = await prisma.menuSection.upsert({
-      where: { slug: 'restaurant' },
+      where: { slug: 'pool-menu' },
       update: { isActive: true },
       create: {
-        slug: 'restaurant',
-        title: { hy: 'Ռեստորան', ru: 'Ресторан', en: 'Restaurant' },
-        sortOrder: 1,
+        slug: 'pool-menu',
+        title: {
+          hy: 'Լողավազանի մենյու',
+          ru: 'Меню бассейна',
+          en: 'Pool Menu',
+        },
+        sortOrder: 0,
         isActive: true,
       },
     });
 
     const category = await prisma.menuCategory.upsert({
       where: {
-        sectionId_slug: { sectionId: section.id, slug: 'daily-menu' },
+        sectionId_slug: { sectionId: section.id, slug: 'bar-menu' },
       },
       update: { isActive: true },
       create: {
         sectionId: section.id,
-        slug: 'daily-menu',
-        title: { hy: 'Օրվա մենյու', ru: 'Дневное меню', en: 'Daily Menu' },
-        sortOrder: 1,
+        slug: 'bar-menu',
+        title: {
+          hy: 'Բարի մենյու',
+          ru: 'Бар-меню',
+          en: 'Bar Menu',
+        },
+        sortOrder: 0,
         isActive: true,
       },
     });
@@ -210,7 +159,7 @@ async function main() {
       },
     });
 
-    await rebuildSnapshots(prisma);
+    await rebuildMenuSnapshots(prisma);
 
     console.log(
       JSON.stringify(
@@ -218,7 +167,7 @@ async function main() {
           ok: true,
           itemId: item.id,
           slug: item.slug,
-          category: 'restaurant/daily-menu',
+          category: 'pool-menu/bar-menu',
           price,
           imageUrl,
         },

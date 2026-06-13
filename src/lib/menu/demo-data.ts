@@ -10,17 +10,35 @@ function mk(hy: string, ru: string, en: string): T {
 const DEMO_SECTIONS = [
   {
     slug: 'pool-menu',
-    title: mk('Բasseinի Menyu', 'Меню Бассейна', 'Pool Menu'),
+    title: mk('Լողավազանի մենյու', 'Меню бассейна', 'Pool Menu'),
     categories: [
       {
         slug: 'bar-menu',
-        title: mk('Barի Menyu', 'Меню Бара', 'Bar Menu'),
+        title: mk('Բարի մենյու', 'Бар-меню', 'Bar Menu'),
         items: [
           {
-            slug: 'demo-drink-1',
-            name: mk('Demo Drink 1', 'Демо Напиток 1', 'Demo Drink 1'),
+            slug: 'frozen-tropical-cocktail',
+            name: mk('Թրոպիկ կոկտեյլ', 'Тропический коктейль', 'Frozen Tropical Cocktail'),
             imageUrl: null,
-            price: 2500,
+            price: 12000,
+          },
+          {
+            slug: 'poolside-mojito',
+            name: mk('Լողավազանի մոխիտո', 'Бассейн мохито', 'Poolside Mojito'),
+            imageUrl: null,
+            price: 11000,
+          },
+          {
+            slug: 'aperol-spritz',
+            name: mk('Ապերոլ սպրից', 'Апероль шприц', 'Aperol Spritz'),
+            imageUrl: null,
+            price: 10500,
+          },
+          {
+            slug: 'cucumber-gin-cooler',
+            name: mk('Վարունգի ջին կուլեր', 'Огуречный джин-кулер', 'Cucumber Gin Cooler'),
+            imageUrl: null,
+            price: 11500,
           },
         ],
       },
@@ -29,10 +47,16 @@ const DEMO_SECTIONS = [
         title: mk('Խոհանոց', 'Кухня', 'Kitchen'),
         items: [
           {
-            slug: 'demo-dish-1',
-            name: mk('Demo Dish 1', 'Демо Блюдо 1', 'Demo Dish 1'),
+            slug: 'grilled-chicken-salad',
+            name: mk('Խորոված հավի սալաթ', 'Салат с курицей гриль', 'Grilled Chicken Salad'),
             imageUrl: null,
-            price: 3500,
+            price: 8500,
+          },
+          {
+            slug: 'club-sandwich',
+            name: mk('Կլաբ սենդվիչ', 'Клаб-сэндвич', 'Club Sandwich'),
+            imageUrl: null,
+            price: 7500,
           },
         ],
       },
@@ -40,65 +64,41 @@ const DEMO_SECTIONS = [
   },
   {
     slug: 'restaurant',
-    title: mk('Ռestoran', 'Ресторан', 'Restaurant'),
+    title: mk('Ռեստորան', 'Ресторан', 'Restaurant'),
     categories: [
       {
-        slug: 'daily-menu',
-        title: mk('Orhva Menyu', 'Дневное Меню', 'Daily Menu'),
-        items: [
-          {
-            slug: 'demo-dish-2',
-            name: mk('Demo Dish 2', 'Демо Блюдо 2', 'Demo Dish 2'),
-            imageUrl: null,
-            price: 4500,
-          },
-        ],
-      },
-      {
         slug: 'bar-menu',
-        title: mk('Barի Menyu', 'Меню Бара', 'Bar Menu'),
+        title: mk('Բարի մենյու', 'Бар-меню', 'Bar Menu'),
         items: [
           {
-            slug: 'demo-drink-2',
-            name: mk('Demo Drink 2', 'Демо Напиток 2', 'Demo Drink 2'),
+            slug: 'house-red-wine',
+            name: mk('Տնային կարմիր գինի', 'Домашнее красное вино', 'House Red Wine'),
             imageUrl: null,
-            price: 1800,
+            price: 9000,
+          },
+          {
+            slug: 'classic-negroni',
+            name: mk('Կլասիկ նեգրոնի', 'Классический негрони', 'Classic Negroni'),
+            imageUrl: null,
+            price: 13000,
           },
         ],
       },
       {
-        slug: 'cocktails',
-        title: mk('Կոkteyller', 'Коктейли', 'Cocktails'),
+        slug: 'kitchen',
+        title: mk('Խոհանոց', 'Кухня', 'Kitchen'),
         items: [
           {
-            slug: 'demo-cocktail',
-            name: mk('Demo Cocktail', 'Демо Коктейль', 'Demo Cocktail'),
+            slug: 'beef-steak',
+            name: mk('Բիֆշտեքս', 'Бифштекс', 'Beef Steak'),
             imageUrl: null,
-            price: 5500,
+            price: 18500,
           },
-        ],
-      },
-      {
-        slug: 'soft-drinks',
-        title: mk('Chshy Chamsher', 'Безалкогольные', 'Soft Drinks'),
-        items: [
           {
-            slug: 'demo-soft-drink',
-            name: mk('Demo Soft Drink', 'Демо Напиток', 'Demo Soft Drink'),
+            slug: 'pasta-carbonara',
+            name: mk('Պաստա կարբոնարա', 'Паста карбонара', 'Pasta Carbonara'),
             imageUrl: null,
-            price: 1200,
-          },
-        ],
-      },
-      {
-        slug: 'alcoholic-drinks',
-        title: mk('Alkoholy Chamsher', 'Алкогольные', 'Alcoholic Drinks'),
-        items: [
-          {
-            slug: 'demo-alcoholic-drink',
-            name: mk('Demo Alcoholic Drink', 'Демо Алк. Напиток', 'Demo Alcoholic Drink'),
-            imageUrl: null,
-            price: null,
+            price: 12500,
           },
         ],
       },

@@ -13,7 +13,7 @@ type Props = {
 };
 
 export function MenuCategoryItemList({ items, sectionLabel, categorySlug }: Props) {
-  const { visibleItems, hasMore, loadMore } = useMenuItemsPagination(items);
+  const { visibleItems, hasMore, loadMore } = useMenuItemsPagination(items, categorySlug);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

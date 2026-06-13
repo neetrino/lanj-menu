@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { locales } from '@/lib/i18n/config';
 import type { Locale } from '@/lib/i18n/config';
+import { captureMenuScrollPosition } from '@/lib/menu/menu-ui-state';
 import { LANGUAGE_BUTTON_SIZE_PX } from './constants';
 import { GlobeIcon } from './icons/GlobeIcon';
 
@@ -37,6 +38,8 @@ export function LanguageSwitcher({ currentLocale }: Props) {
   }, [open]);
 
   const handleSwitch = (locale: Locale) => {
+    captureMenuScrollPosition();
+
     const segments = pathname.split('/');
     if ((locales as readonly string[]).includes(segments[1])) {
       segments[1] = locale;

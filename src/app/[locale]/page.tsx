@@ -3,6 +3,9 @@ import type { Locale } from '@/lib/i18n/config';
 import { getMenu } from '@/lib/menu/get-menu';
 import { MenuPage } from '@/features/menu/MenuPage';
 
+/** Refresh menu snapshots from DB without a full redeploy. */
+export const revalidate = 300;
+
 type Params = { locale: string };
 
 export default async function Page({ params }: { params: Promise<Params> }) {

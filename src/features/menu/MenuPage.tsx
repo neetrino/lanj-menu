@@ -93,7 +93,10 @@ export function MenuPage({ menuPayload, locale }: Props) {
         onCategorySelect={handleCategorySelect}
       />
 
-      <main className="px-5 pb-24 lg:px-10" id="main-content">
+      <main
+        className="px-5 pb-24 pt-[var(--menu-header-height,0px)] lg:px-10 lg:pt-0"
+        id="main-content"
+      >
         {!activeCategory ? (
           <EmptyState message={t.emptyCategory} />
         ) : (

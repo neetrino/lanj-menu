@@ -2,6 +2,7 @@
 export const MENU_MOBILE_MAX_WIDTH = 430;
 
 /** Menu card dimensions from Figma MenuCard */
+export const MENU_CARD_WIDTH_PX = 390;
 export const MENU_CARD_HEIGHT_PX = 220;
 export const MENU_CARD_RADIUS_PX = 28;
 

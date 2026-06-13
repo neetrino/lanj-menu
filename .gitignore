@@ -30,3 +30,4 @@ temp/
 # *.swp
 # *.swo
 #docs/reference/payment integration/Example only
+.vercel

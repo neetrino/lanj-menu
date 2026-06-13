@@ -1,6 +1,8 @@
 # Զարգացման կանոնների կաղապար (Cursor AI)
 
-Cursor-ում AI-զարգացման կանոններով repo-ի կաղապար։ Next.js / NestJS, ճարտարապետություն, կոդ, անվտանգություն, թեստեր, դեպլոյ։
+Lanj Menu — հանրային ճաշացանկ (Next.js 15, Neon, R2).
+
+**Deploy:** [`docs/DEPLOY.md`](docs/DEPLOY.md) · **Pre-deploy check:** `pnpm check`
 
 ---
 

@@ -1,5 +1,7 @@
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { NextResponse } from 'next/server';
+import { resolveImageContentType } from '@/lib/r2/resolve-image-content-type';
+import { isAllowedR2ObjectKey } from '@/lib/r2/validate-object-key';
 
 const accountId = process.env.R2_ACCOUNT_ID;
 const accessKeyId = process.env.R2_ACCESS_KEY_ID;
@@ -26,6 +28,10 @@ export async function GET(request: Request): Promise<Response> {
     return NextResponse.json({ error: 'Missing image key' }, { status: 400 });
   }
 
+  if (!isAllowedR2ObjectKey(key)) {
+    return NextResponse.json({ error: 'Invalid image key' }, { status: 403 });
+  }
+
   try {
     const data = await r2Client.send(
       new GetObjectCommand({
@@ -36,14 +42,20 @@ export async function GET(request: Request): Promise<Response> {
 
     const body = data.Body;
     if (!body) {
-      return NextResponse.json({ error: 'Image body is empty' }, { status: 404 });
+      return NextResponse.json({ error: 'Image not found' }, { status: 404 });
+    }
+
+    const contentType = resolveImageContentType(key, data.ContentType);
+    if (!contentType) {
+      return NextResponse.json({ error: 'Unsupported image type' }, { status: 415 });
     }
 
     return new Response(body as ReadableStream, {
       status: 200,
       headers: {
-        'Content-Type': data.ContentType || 'application/octet-stream',
+        'Content-Type': contentType,
         'Cache-Control': 'public, max-age=31536000, immutable',
+        'X-Content-Type-Options': 'nosniff',
       },
     });
   } catch {

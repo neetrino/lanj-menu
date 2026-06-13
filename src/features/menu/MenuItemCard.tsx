@@ -1,7 +1,11 @@
 import Image from 'next/image';
 import { formatPrice } from '@/lib/menu/format-price';
 import type { MenuItemPayload } from '@/lib/menu/types';
-import { MENU_CARD_HEIGHT_PX, MENU_CARD_RADIUS_PX } from './constants';
+import {
+  MENU_CARD_HEIGHT_PX,
+  MENU_CARD_RADIUS_PX,
+  MENU_CARD_WIDTH_PX,
+} from './constants';
 import { MenuItemPrice } from './MenuItemPrice';
 
 type Props = {
@@ -14,10 +18,11 @@ export function MenuItemCard({ item, categoryLabel }: Props) {
 
   return (
     <article
-      className="relative isolate overflow-hidden bg-surface-card shadow-[0_4px_24px_rgba(44,24,16,0.12)]"
+      className="relative isolate w-full overflow-hidden bg-surface-card shadow-[0_4px_24px_rgba(44,24,16,0.12)] lg:w-[var(--menu-card-width)]"
       style={{
         height: `${MENU_CARD_HEIGHT_PX}px`,
         borderRadius: `${MENU_CARD_RADIUS_PX}px`,
+        ['--menu-card-width' as string]: `${MENU_CARD_WIDTH_PX}px`,
       }}
     >
       {item.imageUrl ? (

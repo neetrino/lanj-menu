@@ -28,7 +28,7 @@ export function CategoryTabs({ categories, activeCategorySlug, onSelect }: Props
   return (
     <nav
       aria-label="Menu categories"
-      className="flex gap-2 overflow-x-auto scrollbar-hide py-5"
+      className="flex gap-2 overflow-x-auto scrollbar-hide py-5 lg:overflow-visible"
     >
       {categories.map((cat) => {
         const isActive = cat.slug === activeCategorySlug;

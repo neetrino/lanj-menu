@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { MenuItemCard } from './MenuItemCard';
 import { useMenuItemsPagination } from './use-menu-items-pagination';
-import { MENU_ITEMS_SCROLL_ROOT_MARGIN } from './constants';
+import { MENU_CARD_WIDTH_PX, MENU_ITEMS_SCROLL_ROOT_MARGIN } from './constants';
 import type { MenuItemPayload } from '@/lib/menu/types';
 
 type Props = {
@@ -35,9 +35,13 @@ export function MenuCategoryItemList({ items, categoryLabel, categorySlug }: Pro
 
   return (
     <>
-      <ul className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-5" role="list">
+      <ul
+        className="flex flex-col gap-4 lg:grid lg:justify-between lg:gap-x-6 lg:gap-y-5 lg:[grid-template-columns:repeat(auto-fill,var(--menu-card-width))]"
+        style={{ ['--menu-card-width' as string]: `${MENU_CARD_WIDTH_PX}px` }}
+        role="list"
+      >
         {visibleItems.map((item) => (
-          <li key={item.slug}>
+          <li key={item.slug} className="w-full lg:w-auto">
             <MenuItemCard item={item} categoryLabel={categoryLabel} />
           </li>
         ))}

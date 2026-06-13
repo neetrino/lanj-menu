@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" role="img" aria-hidden="true">
+  <defs>
+    <clipPath id="c">
+      <circle cx="14" cy="14" r="13"/>
+    </clipPath>
+  </defs>
+  <circle cx="14" cy="14" r="13" fill="#ffffff"/>
+  <g clip-path="url(#c)">
+    <rect x="0" y="0" width="28" height="9.34" fill="#d90012"/>
+    <rect x="0" y="9.34" width="28" height="9.34" fill="#0033a0"/>
+    <rect x="0" y="18.68" width="28" height="9.34" fill="#f2a800"/>
+  </g>
+  <circle cx="14" cy="14" r="13" fill="none" stroke="#ffffff" stroke-width="1.2"/>
+</svg>

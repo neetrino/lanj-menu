@@ -7,3 +7,9 @@ export const MENU_CARD_RADIUS_PX = 28;
 
 /** Globe language button size */
 export const LANGUAGE_BUTTON_SIZE_PX = 44;
+
+/** Items shown per batch when scrolling the menu list */
+export const MENU_ITEMS_PAGE_SIZE = 10;
+
+/** IntersectionObserver margin — prefetch next batch before sentinel is visible */
+export const MENU_ITEMS_SCROLL_ROOT_MARGIN = '200px';

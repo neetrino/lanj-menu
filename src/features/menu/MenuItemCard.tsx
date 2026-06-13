@@ -2,14 +2,14 @@ import Image from 'next/image';
 import { formatPrice } from '@/lib/menu/format-price';
 import type { MenuItemPayload } from '@/lib/menu/types';
 import { MENU_CARD_HEIGHT_PX, MENU_CARD_RADIUS_PX } from './constants';
-import { ArrowUpRightIcon } from './icons/ArrowUpRightIcon';
+import { MenuItemPrice } from './MenuItemPrice';
 
 type Props = {
   item: MenuItemPayload;
-  sectionLabel: string;
+  categoryLabel: string;
 };
 
-export function MenuItemCard({ item, sectionLabel }: Props) {
+export function MenuItemCard({ item, categoryLabel }: Props) {
   const price = formatPrice(item.price);
 
   return (
@@ -41,35 +41,20 @@ export function MenuItemCard({ item, sectionLabel }: Props) {
       <span
         className="absolute left-3.5 top-3.5 rounded-full bg-[rgba(255,248,243,0.88)] px-3 py-[7px] text-[10.88px] font-semibold text-brand-accent"
       >
-        {sectionLabel}
+        {categoryLabel}
       </span>
 
-      <button
-        type="button"
-        aria-label={`View ${item.name}`}
-        className={[
-          'absolute right-3.5 top-3.5 flex items-center justify-center',
-          'size-10 rounded-[20px] bg-[rgba(255,248,243,0.92)] text-text-primary',
-          'shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-opacity hover:opacity-90',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80',
-        ].join(' ')}
-      >
-        <ArrowUpRightIcon />
-      </button>
-
-      <div className="absolute inset-x-0 bottom-0 px-5 pb-[17.6px] pt-4">
-        <h3 className="font-display text-[18.4px] font-bold leading-[1.25] text-surface-cream">
+      <div className="absolute inset-x-0 bottom-0 px-5 pb-[17.6px] pt-4 text-white">
+        <h3 className="font-display text-[18.4px] font-bold leading-[1.25]">
           {item.name}
         </h3>
 
-        <div className="mt-1 flex items-center justify-between gap-3 pt-1">
-          <span className="min-w-0 flex-1" />
-          {price && (
-            <p className="shrink-0 text-base font-bold text-brand-price" aria-label={`Price: ${price}`}>
-              {price}
-            </p>
-          )}
-        </div>
+        {price && (
+          <div className="flex items-center justify-between pt-1">
+            <span className="min-w-0 flex-1" />
+            <MenuItemPrice price={price} />
+          </div>
+        )}
       </div>
     </article>
   );

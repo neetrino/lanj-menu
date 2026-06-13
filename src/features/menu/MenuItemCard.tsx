@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { formatPrice } from '@/lib/menu/format-price';
 import type { MenuItemPayload } from '@/lib/menu/types';
 import { MENU_CARD_HEIGHT_PX, MENU_CARD_RADIUS_PX } from './constants';
+import { MenuItemPrice } from './MenuItemPrice';
 
 type Props = {
   item: MenuItemPayload;
@@ -43,19 +44,15 @@ export function MenuItemCard({ item, sectionLabel }: Props) {
         {sectionLabel}
       </span>
 
-      <div className="absolute inset-x-0 bottom-0 px-5 pb-[17.6px] pt-4">
-        <h3 className="font-display text-[18.4px] font-bold leading-[1.25] text-white">
+      <div className="absolute inset-x-0 bottom-0 px-5 pb-[17.6px] pt-4 text-white">
+        <h3 className="font-display text-[18.4px] font-bold leading-[1.25]">
           {item.name}
         </h3>
 
         {price && (
-          <div className="mt-1 flex items-end justify-end pt-1">
-            <p
-              className="font-sans text-base font-bold leading-6 text-brand-price"
-              aria-label={`Price: ${price}`}
-            >
-              {price}
-            </p>
+          <div className="flex items-center justify-between pt-1">
+            <span className="min-w-0 flex-1" />
+            <MenuItemPrice price={price} />
           </div>
         )}
       </div>

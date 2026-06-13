@@ -9,6 +9,7 @@ import { getUiTranslations } from '@/lib/menu/translations';
 import {
   captureMenuScrollPosition,
   patchMenuUiState,
+  resolveDefaultMenuTabs,
   resolveInitialMenuTabs,
   restoreMenuScrollPosition,
 } from '@/lib/menu/menu-ui-state';
@@ -24,12 +25,15 @@ export function MenuPage({ menuPayload, locale }: Props) {
   const { sections } = menuPayload;
   const t = getUiTranslations(locale);
 
-  const [activeSectionSlug, setActiveSectionSlug] = useState(
-    () => resolveInitialMenuTabs(sections).sectionSlug,
-  );
-  const [activeCategorySlug, setActiveCategorySlug] = useState(
-    () => resolveInitialMenuTabs(sections).categorySlug,
-  );
+  const defaultTabs = resolveDefaultMenuTabs(sections);
+  const [activeSectionSlug, setActiveSectionSlug] = useState(defaultTabs.sectionSlug);
+  const [activeCategorySlug, setActiveCategorySlug] = useState(defaultTabs.categorySlug);
+
+  useEffect(() => {
+    const saved = resolveInitialMenuTabs(sections);
+    setActiveSectionSlug(saved.sectionSlug);
+    setActiveCategorySlug(saved.categorySlug);
+  }, [sections]);
 
   const activeSection = sections.find((s) => s.slug === activeSectionSlug);
   const categories = activeSection?.categories ?? [];

@@ -1,20 +1,436 @@
 [
-  { "slug": "item-1781294512104", "hy": "Կեսար", "price": 3800 },
-  { "slug": "item-1781294552229", "hy": "Պաստա ծովախեցգետնով", "price": 4500 },
-  { "slug": "item-1781294594342", "hy": "Ճուտ ֆրի", "price": 3000 },
-  { "slug": "item-1781294630896", "hy": "Սիգ թարխունով", "price": 4000 },
-  { "slug": "item-1781294676310", "hy": "Գառան թիակ արիշտայով", "price": 13000 },
-  { "slug": "item-1781294715406", "hy": "Տավարի չալաղաջ արիշտայով", "price": 12000 },
-  { "slug": "item-1781294755657", "hy": "Տավարի փափկամաս գառան դմակով", "price": 6500 },
-  { "slug": "item-1781294800400", "hy": "Խորովածի սեթ", "price": 32000 },
-  { "slug": "item-1781294840892", "hy": "Տավարի սրունք", "price": 25000 },
-  { "slug": "item-1781294884815", "hy": "Սաղմոն ռիզոտբյով", "price": 8000 },
-  { "slug": "item-1781294928396", "hy": "Գառան մաչա բթղուրով", "price": 6500 },
-  { "slug": "item-1781294968953", "hy": "Լցոնած բանջարեղեն", "price": 3800 },
-  { "slug": "item-1781295013519", "hy": "Հավի կդծքամիս սերուցքբվ", "price": 4200 },
-  { "slug": "item-1781295062065", "hy": "Հավի ապուր", "price": 2200 },
-  { "slug": "item-1781295112361", "hy": "Թայբիֆ", "price": 4500 },
-  { "slug": "item-1781295158728", "hy": "Քինուա հավ", "price": 4200 },
-  { "slug": "item-1781295259760", "hy": "Քինուա հավ", "price": 4200 },
-  { "slug": "item-1781295940837", "hy": "Քինուա հավ", "price": 4200 }
+  {
+    "slug": "lanj-salad",
+    "photo": "YPP_3200.jpg",
+    "price": 3500,
+    "name": {
+      "hy": "Լանջ աղցան",
+      "ru": "Салат «Ландж»",
+      "en": "Lanj Salad"
+    }
+  },
+  {
+    "slug": "greek-salad",
+    "photo": "YPP_3244.jpg",
+    "price": 3500,
+    "name": {
+      "hy": "Հունական աղցան",
+      "ru": "Греческий салат",
+      "en": "Greek Salad"
+    },
+    "note": "Price not in chat; matched to Lanj salad tier"
+  },
+  {
+    "slug": "caesar-salad",
+    "photo": "YPP_3219.jpg",
+    "price": 3800,
+    "name": {
+      "hy": "Կեսար",
+      "ru": "Цезарь",
+      "en": "Caesar Salad"
+    }
+  },
+  {
+    "slug": "shrimp-caesar",
+    "photo": "YPP_3221.jpg",
+    "price": 4800,
+    "name": {
+      "hy": "Ծովախեցգետնով կեսար",
+      "ru": "Цезарь с креветками",
+      "en": "Shrimp Caesar Salad"
+    }
+  },
+  {
+    "slug": "caprese",
+    "photo": "YPP_3216.jpg",
+    "price": 4300,
+    "name": {
+      "hy": "Կապրեզե",
+      "ru": "Капрезе",
+      "en": "Caprese"
+    }
+  },
+  {
+    "slug": "beef-salad",
+    "photo": "YPP_3230.jpg",
+    "price": 4000,
+    "name": {
+      "hy": "Տավարի մսով աղցան",
+      "ru": "Салат с говядиной",
+      "en": "Beef Salad"
+    }
+  },
+  {
+    "slug": "vegetable-bouquet",
+    "photo": "YPP_3213.jpg",
+    "price": 3700,
+    "name": {
+      "hy": "Բանջարեղենի փունջ",
+      "ru": "Овощной букет",
+      "en": "Vegetable Bouquet"
+    }
+  },
+  {
+    "slug": "appetizer-set",
+    "photo": "YPP_3195.jpg",
+    "price": 2500,
+    "name": {
+      "hy": "Նախուտեստի սեթ",
+      "ru": "Сет закусок",
+      "en": "Appetizer Set"
+    }
+  },
+  {
+    "slug": "tomato-bruschetta",
+    "photo": "YPP_3190.jpg",
+    "price": 3000,
+    "name": {
+      "hy": "Բրուսկետտա լոլիկով",
+      "ru": "Брускетта с помидорами",
+      "en": "Tomato Bruschetta"
+    }
+  },
+  {
+    "slug": "salmon-bruschetta",
+    "photo": "YPP_3210.jpg",
+    "price": 4000,
+    "name": {
+      "hy": "Բրուսկետա սաղմոնով",
+      "ru": "Брускетта с лососем",
+      "en": "Salmon Bruschetta"
+    }
+  },
+  {
+    "slug": "olives",
+    "photo": "YPP_3208.jpg",
+    "price": 2200,
+    "name": {
+      "hy": "Ձիթապտուղ",
+      "ru": "Оливки",
+      "en": "Olives"
+    }
+  },
+  {
+    "slug": "european-cheese-board",
+    "photo": "YPP_3185.jpg",
+    "price": 6500,
+    "name": {
+      "hy": "Եվրոպական պանրի տեսականի",
+      "ru": "Европейская сырная тарелка",
+      "en": "European Cheese Board"
+    }
+  },
+  {
+    "slug": "fried-cheese",
+    "photo": "YPP_3272.jpg",
+    "price": 2500,
+    "name": {
+      "hy": "Տապակած պանիր",
+      "ru": "Жареный сыр",
+      "en": "Fried Cheese"
+    }
+  },
+  {
+    "slug": "stuffed-vegetables",
+    "photo": "YPP_3286.jpg",
+    "price": 3800,
+    "name": {
+      "hy": "Լցոնած բանջարեղեն",
+      "ru": "Фаршированные овощи",
+      "en": "Stuffed Vegetables"
+    }
+  },
+  {
+    "slug": "calamari-rings",
+    "photo": "YPP_3250.jpg",
+    "price": 2500,
+    "name": {
+      "hy": "Կալմարի օղակներ",
+      "ru": "Кольца кальмара",
+      "en": "Calamari Rings"
+    }
+  },
+  {
+    "slug": "shrimp-tempura",
+    "photo": "YPP_3239.jpg",
+    "price": 4800,
+    "name": {
+      "hy": "Ծովախեցգետնով տեմպուրա",
+      "ru": "Темпура с креветками",
+      "en": "Shrimp Tempura"
+    }
+  },
+  {
+    "slug": "chicken-nuggets",
+    "photo": "YPP_3248.jpg",
+    "price": 2800,
+    "name": {
+      "hy": "Հավի նագեթս",
+      "ru": "Куриные наггетсы",
+      "en": "Chicken Nuggets"
+    }
+  },
+  {
+    "slug": "seafood-platter",
+    "photo": "YPP_3266.jpg",
+    "price": 15000,
+    "name": {
+      "hy": "Ծովամթերքի սեթ",
+      "ru": "Сет морепродуктов",
+      "en": "Seafood Platter"
+    }
+  },
+  {
+    "slug": "mushroom-cream-soup",
+    "photo": "YPP_3284.jpg",
+    "price": 3000,
+    "name": {
+      "hy": "Սնկով կրեմապուր",
+      "ru": "Крем-суп с грибами",
+      "en": "Mushroom Cream Soup"
+    }
+  },
+  {
+    "slug": "pumpkin-cream-soup",
+    "photo": "YPP_3285.jpg",
+    "price": 2400,
+    "name": {
+      "hy": "Դդմով կրեմապուր",
+      "ru": "Крем-суп с тыквой",
+      "en": "Pumpkin Cream Soup"
+    }
+  },
+  {
+    "slug": "chicken-soup",
+    "photo": "YPP_3294.jpg",
+    "price": 2200,
+    "name": {
+      "hy": "Հավի ապուր",
+      "ru": "Куриный суп",
+      "en": "Chicken Soup"
+    }
+  },
+  {
+    "slug": "chicken-with-fries",
+    "photo": "YPP_3297.jpg",
+    "price": 3000,
+    "name": {
+      "hy": "Ճուտ ֆրի",
+      "ru": "Цыплёнок с картофелем фри",
+      "en": "Chicken with Fries"
+    }
+  },
+  {
+    "slug": "chicken-roquefort",
+    "photo": "YPP_3279.jpg",
+    "price": 4200,
+    "name": {
+      "hy": "Հավ ռոքֆորտ",
+      "ru": "Курица с рокфором",
+      "en": "Chicken Roquefort"
+    }
+  },
+  {
+    "slug": "quail",
+    "photo": "YPP_3281.jpg",
+    "price": 5500,
+    "name": {
+      "hy": "Լոր",
+      "ru": "Перепелка",
+      "en": "Quail"
+    }
+  },
+  {
+    "slug": "chicken-breast-cream",
+    "photo": "YPP_3290.jpg",
+    "price": 4200,
+    "name": {
+      "hy": "Հավի կրծքամիս սերուցքով",
+      "ru": "Куриная грудка со сливками",
+      "en": "Chicken Breast with Cream"
+    }
+  },
+  {
+    "slug": "quinoa-chicken",
+    "photo": "YPP_3235.jpg",
+    "price": 4200,
+    "name": {
+      "hy": "Քինուա հավով",
+      "ru": "Киноа с курицей",
+      "en": "Quinoa with Chicken"
+    }
+  },
+  {
+    "slug": "whitefish-tarragon",
+    "photo": "YPP_3299.jpg",
+    "price": 4000,
+    "name": {
+      "hy": "Սիգ թարխունով",
+      "ru": "Сиг с эстрагоном",
+      "en": "Whitefish with Tarragon"
+    }
+  },
+  {
+    "slug": "salmon-risotto",
+    "photo": "YPP_3336.jpg",
+    "price": 8000,
+    "name": {
+      "hy": "Սաղմոն ռիզոտոյով",
+      "ru": "Лосось с ризотто",
+      "en": "Salmon with Risotto"
+    }
+  },
+  {
+    "slug": "pasta-alfredo",
+    "photo": "YPP_3351.jpg",
+    "price": 2800,
+    "name": {
+      "hy": "Պաստա ալֆրեդո",
+      "ru": "Паста Альфредо",
+      "en": "Pasta Alfredo"
+    }
+  },
+  {
+    "slug": "pasta-carbonara",
+    "photo": "YPP_3351.jpg",
+    "price": 3500,
+    "name": {
+      "hy": "Պաստա կարբոնարա",
+      "ru": "Паста карбонара",
+      "en": "Pasta Carbonara"
+    },
+    "note": "Shares creamy pasta photo until dedicated shot is available"
+  },
+  {
+    "slug": "pasta-shrimp",
+    "photo": "YPP_3355.jpg",
+    "price": 4500,
+    "name": {
+      "hy": "Պաստա ծովախեցգետնով",
+      "ru": "Паста с креветками",
+      "en": "Pasta with Shrimp"
+    }
+  },
+  {
+    "slug": "beef-medallions",
+    "photo": "YPP_3363.jpg",
+    "price": 9000,
+    "name": {
+      "hy": "Տավարի միլիոն",
+      "ru": "Говяжье медальон",
+      "en": "Beef Medallions"
+    }
+  },
+  {
+    "slug": "french-langette",
+    "photo": "YPP_3308.jpg",
+    "price": 5200,
+    "name": {
+      "hy": "Ֆրանսիական լանգետ",
+      "ru": "Французский лангет",
+      "en": "French Langette"
+    }
+  },
+  {
+    "slug": "viennese-ribs",
+    "photo": "YPP_3346.jpg",
+    "price": 6000,
+    "name": {
+      "hy": "Վիեննական ռիբս",
+      "ru": "Венские рёбрышки",
+      "en": "Viennese Ribs"
+    }
+  },
+  {
+    "slug": "beef-tail-khashlama",
+    "photo": "YPP_3253.jpg",
+    "price": 6500,
+    "name": {
+      "hy": "Տավարի պոչի խաշլամա",
+      "ru": "Хашлама из бычьего хвоста",
+      "en": "Beef Tail Khashlama"
+    }
+  },
+  {
+    "slug": "lamb-khashlama",
+    "photo": "YPP_3257.jpg",
+    "price": 6500,
+    "name": {
+      "hy": "Գառան խաշլամա",
+      "ru": "Баранина хашлама",
+      "en": "Lamb Khashlama"
+    }
+  },
+  {
+    "slug": "lamb-shoulder-arishta",
+    "photo": "YPP_3303.jpg",
+    "price": 13000,
+    "name": {
+      "hy": "Գառան թիակ արիշտայով",
+      "ru": "Баранина с ариштой",
+      "en": "Lamb Shoulder with Arishta"
+    }
+  },
+  {
+    "slug": "beef-chalaghaj-arishta",
+    "photo": "YPP_3310.jpg",
+    "price": 12000,
+    "name": {
+      "hy": "Տավարի չալաղաջ արիշտայով",
+      "ru": "Говядина чалагадж с ариштой",
+      "en": "Beef Chalaghaj with Arishta"
+    }
+  },
+  {
+    "slug": "beef-tenderloin-tail-fat",
+    "photo": "YPP_3363.jpg",
+    "price": 6500,
+    "name": {
+      "hy": "Տավարի փափկամաս գառան դմակով",
+      "ru": "Говяжья вырезка с думом",
+      "en": "Beef Tenderloin with Tail Fat"
+    },
+    "note": "Shares beef medallions photo until dedicated shot is available"
+  },
+  {
+    "slug": "bbq-set",
+    "photo": "YPP_3320.jpg",
+    "price": 32000,
+    "name": {
+      "hy": "Խորովածի սեթ",
+      "ru": "Сет шашлыков",
+      "en": "BBQ Set"
+    }
+  },
+  {
+    "slug": "beef-shank",
+    "photo": "YPP_3333.jpg",
+    "price": 25000,
+    "name": {
+      "hy": "Տավարի սրունք",
+      "ru": "Говяжья голяшка",
+      "en": "Beef Shank"
+    }
+  },
+  {
+    "slug": "lamb-macha-flatbread",
+    "photo": "YPP_3343.jpg",
+    "price": 6500,
+    "name": {
+      "hy": "Գառան մաչա բթղուրով",
+      "ru": "Баранина мча с лавашом",
+      "en": "Lamb Macha with Flatbread"
+    }
+  },
+  {
+    "slug": "thai-beef",
+    "photo": "YPP_3232.jpg",
+    "price": 4500,
+    "name": {
+      "hy": "Թայբիֆ",
+      "ru": "Тай-биф",
+      "en": "Thai Beef"
+    },
+    "note": "Shares beef salad photo until dedicated shot is available"
+  }
 ]

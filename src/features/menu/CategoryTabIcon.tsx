@@ -52,7 +52,7 @@ function KitchenIcon({ className }: { className: string }) {
 }
 
 export function CategoryTabIcon({ slug, isActive }: Props) {
-  const colorClass = isActive ? 'text-surface-cream' : 'text-brand-bg';
+  const colorClass = isActive ? '!text-[#fff8f3]' : '!text-[#faaa77]';
   return isKitchenSlug(slug) ? (
     <KitchenIcon className={`shrink-0 ${colorClass}`} />
   ) : (

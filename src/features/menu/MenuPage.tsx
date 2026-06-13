@@ -95,7 +95,6 @@ export function MenuPage({ menuPayload, locale }: Props) {
         ) : (
           <MenuCategorySection
             category={activeCategory}
-            sectionLabel={activeSection?.title ?? ''}
             emptyMessage={t.emptyCategory}
           />
         )}

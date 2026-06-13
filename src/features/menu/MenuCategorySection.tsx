@@ -4,11 +4,10 @@ import type { MenuCategoryPayload } from '@/lib/menu/types';
 
 type Props = {
   category: MenuCategoryPayload;
-  sectionLabel: string;
   emptyMessage?: string;
 };
 
-export function MenuCategorySection({ category, sectionLabel, emptyMessage }: Props) {
+export function MenuCategorySection({ category, emptyMessage }: Props) {
   return (
     <section
       id={`category-${category.slug}`}
@@ -24,7 +23,7 @@ export function MenuCategorySection({ category, sectionLabel, emptyMessage }: Pr
       ) : (
         <MenuCategoryItemList
           items={category.items}
-          sectionLabel={sectionLabel}
+          categoryLabel={category.title}
           categorySlug={category.slug}
         />
       )}

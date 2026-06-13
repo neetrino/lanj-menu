@@ -8,11 +8,11 @@ import type { MenuItemPayload } from '@/lib/menu/types';
 
 type Props = {
   items: MenuItemPayload[];
-  sectionLabel: string;
+  categoryLabel: string;
   categorySlug: string;
 };
 
-export function MenuCategoryItemList({ items, sectionLabel, categorySlug }: Props) {
+export function MenuCategoryItemList({ items, categoryLabel, categorySlug }: Props) {
   const { visibleItems, hasMore, loadMore } = useMenuItemsPagination(items, categorySlug);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +38,7 @@ export function MenuCategoryItemList({ items, sectionLabel, categorySlug }: Prop
       <ul className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-5" role="list">
         {visibleItems.map((item) => (
           <li key={item.slug}>
-            <MenuItemCard item={item} sectionLabel={sectionLabel} />
+            <MenuItemCard item={item} categoryLabel={categoryLabel} />
           </li>
         ))}
       </ul>

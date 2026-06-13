@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { MenuHeader } from './MenuHeader';
 import { MenuCategorySection } from './MenuCategorySection';
+import { MenuPageContainer } from './MenuPageContainer';
 import { EmptyState } from './EmptyState';
 import { getUiTranslations } from '@/lib/menu/translations';
 import type { MenuPayload } from '@/lib/menu/types';
@@ -26,9 +27,11 @@ export function MenuPage({ menuPayload, locale }: Props) {
 
   if (sections.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <EmptyState message={t.noMenu} />
-      </div>
+      <MenuPageContainer>
+        <div className="flex min-h-screen items-center justify-center px-6">
+          <EmptyState message={t.noMenu} />
+        </div>
+      </MenuPageContainer>
     );
   }
 
@@ -38,8 +41,10 @@ export function MenuPage({ menuPayload, locale }: Props) {
     setActiveCategorySlug(section?.categories[0]?.slug ?? '');
   };
 
+  const activeCategory = categories.find((c) => c.slug === activeCategorySlug);
+
   return (
-    <div className="min-h-screen">
+    <MenuPageContainer>
       <MenuHeader
         locale={locale}
         sections={sections}
@@ -49,19 +54,17 @@ export function MenuPage({ menuPayload, locale }: Props) {
         onCategorySelect={setActiveCategorySlug}
       />
 
-      <main className="max-w-3xl mx-auto pb-12" id="main-content">
-        {categories.length === 0 ? (
+      <main className="px-5 pb-24 lg:px-8" id="main-content">
+        {!activeCategory ? (
           <EmptyState message={t.emptyCategory} />
         ) : (
-          categories.map((category) => (
-            <MenuCategorySection
-              key={category.slug}
-              category={category}
-              emptyMessage={t.emptyCategory}
-            />
-          ))
+          <MenuCategorySection
+            category={activeCategory}
+            sectionLabel={activeSection?.title ?? ''}
+            emptyMessage={t.emptyCategory}
+          />
         )}
       </main>
-    </div>
+    </MenuPageContainer>
   );
 }

@@ -1,62 +1,97 @@
 'use client';
 
-import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { locales } from '@/lib/i18n/config';
 import type { Locale } from '@/lib/i18n/config';
+import { LANGUAGE_BUTTON_SIZE_PX } from './constants';
+import { GlobeIcon } from './icons/GlobeIcon';
 
 type Props = {
   currentLocale: Locale;
 };
 
-const LOCALE_META: Record<Locale, { ariaLabel: string; iconSrc: string }> = {
-  hy: { ariaLabel: 'Armenian', iconSrc: '/icons/languages/hy.svg' },
-  ru: { ariaLabel: 'Russian', iconSrc: '/icons/languages/ru.svg' },
-  en: { ariaLabel: 'English', iconSrc: '/icons/languages/en.svg' },
+const LOCALE_LABEL: Record<Locale, string> = {
+  hy: 'Հայերեն',
+  ru: 'Русский',
+  en: 'English',
 };
 
 export function LanguageSwitcher({ currentLocale }: Props) {
   const pathname = usePathname();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [open]);
 
   const handleSwitch = (locale: Locale) => {
     const segments = pathname.split('/');
-    // segments[1] is the current locale — replace it
     if ((locales as readonly string[]).includes(segments[1])) {
       segments[1] = locale;
       router.push(segments.join('/'));
     } else {
       router.push(`/${locale}`);
     }
+    setOpen(false);
   };
 
   return (
-    <nav aria-label="Language switcher" className="flex gap-1 flex-shrink-0">
-      {locales.map((locale) => (
-        <button
-          key={locale}
-          onClick={() => handleSwitch(locale)}
-          aria-pressed={locale === currentLocale}
-          aria-label={LOCALE_META[locale].ariaLabel}
-          className={[
-            'h-9 w-9 rounded-full p-0.5 transition-all border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80',
-            locale === currentLocale
-              ? 'bg-white border-white shadow-sm scale-105'
-              : 'bg-transparent border-transparent hover:bg-white/20 focus-visible:bg-white/20',
-          ].join(' ')}
+    <div ref={containerRef} className="relative shrink-0 pt-1">
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        aria-label="Change language"
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        className={[
+          'flex items-center justify-center rounded-full bg-brand-bg text-text-primary',
+          'transition-opacity hover:opacity-90',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50',
+        ].join(' ')}
+        style={{
+          width: `${LANGUAGE_BUTTON_SIZE_PX}px`,
+          height: `${LANGUAGE_BUTTON_SIZE_PX}px`,
+        }}
+      >
+        <GlobeIcon />
+      </button>
+
+      {open && (
+        <ul
+          role="listbox"
+          aria-label="Languages"
+          className="absolute right-0 top-full z-50 mt-2 min-w-[9rem] rounded-2xl border border-black/5 bg-white py-1 shadow-[0_4px_24px_rgba(44,24,16,0.12)]"
         >
-          <span className="sr-only">{LOCALE_META[locale].ariaLabel}</span>
-          <Image
-            src={LOCALE_META[locale].iconSrc}
-            alt=""
-            aria-hidden="true"
-            width={28}
-            height={28}
-            className="h-full w-full rounded-full object-cover"
-            priority={locale === currentLocale}
-          />
-        </button>
-      ))}
-    </nav>
+          {locales.map((locale) => (
+            <li key={locale} role="option" aria-selected={locale === currentLocale}>
+              <button
+                type="button"
+                onClick={() => handleSwitch(locale)}
+                className={[
+                  'w-full px-4 py-2.5 text-left text-sm font-medium transition-colors',
+                  locale === currentLocale
+                    ? 'text-brand-accent'
+                    : 'text-text-primary hover:bg-brand-bg/20',
+                ].join(' ')}
+              >
+                {LOCALE_LABEL[locale]}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

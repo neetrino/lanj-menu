@@ -76,18 +76,32 @@ export function getCategoryVisibleCount(categorySlug: string): number | undefine
   return readState().visibleCounts[categorySlug];
 }
 
-type InitialTabs = {
+export type MenuTabSlugs = {
   sectionSlug: string;
   categorySlug: string;
 };
 
+/** First section/category only — safe for SSR and hydration. */
+export function resolveDefaultMenuTabs(sections: MenuSectionPayload[]): MenuTabSlugs {
+  const sectionSlug = sections[0]?.slug ?? '';
+  const categories = sections.find((s) => s.slug === sectionSlug)?.categories ?? [];
+  const categorySlug = categories[0]?.slug ?? '';
+  return { sectionSlug, categorySlug };
+}
+
 /**
  * Resolves section/category slugs from sessionStorage, falling back to the first
  * available entries when saved slugs are missing or invalid.
+ * Call only after mount — not during SSR or the initial client render.
  */
-export function resolveInitialMenuTabs(sections: MenuSectionPayload[]): InitialTabs {
-  const saved = readState();
+export function resolveInitialMenuTabs(sections: MenuSectionPayload[]): MenuTabSlugs {
+  return resolveMenuTabsFromState(sections, readState());
+}
 
+function resolveMenuTabsFromState(
+  sections: MenuSectionPayload[],
+  saved: Partial<MenuUiState>,
+): MenuTabSlugs {
   const sectionSlug =
     saved.sectionSlug && sections.some((s) => s.slug === saved.sectionSlug)
       ? saved.sectionSlug

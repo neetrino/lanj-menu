@@ -8,7 +8,7 @@ import {
 import type { MenuItemPayload } from '@/lib/menu/types';
 import { MENU_ITEMS_PAGE_SIZE } from './constants';
 
-function resolveInitialVisibleCount(categorySlug: string, itemCount: number): number {
+function resolveSavedVisibleCount(categorySlug: string, itemCount: number): number {
   const saved = getCategoryVisibleCount(categorySlug);
   if (saved !== undefined && saved >= MENU_ITEMS_PAGE_SIZE) {
     return Math.min(saved, itemCount);
@@ -16,13 +16,17 @@ function resolveInitialVisibleCount(categorySlug: string, itemCount: number): nu
   return Math.min(MENU_ITEMS_PAGE_SIZE, itemCount);
 }
 
+function resolveDefaultVisibleCount(itemCount: number): number {
+  return Math.min(MENU_ITEMS_PAGE_SIZE, itemCount);
+}
+
 export function useMenuItemsPagination(items: MenuItemPayload[], categorySlug: string) {
   const [visibleCount, setVisibleCount] = useState(() =>
-    resolveInitialVisibleCount(categorySlug, items.length),
+    resolveDefaultVisibleCount(items.length),
   );
 
   useEffect(() => {
-    setVisibleCount(resolveInitialVisibleCount(categorySlug, items.length));
+    setVisibleCount(resolveSavedVisibleCount(categorySlug, items.length));
   }, [categorySlug, items.length]);
 
   useEffect(() => {

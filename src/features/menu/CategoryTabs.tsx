@@ -1,7 +1,6 @@
 'use client';
 
-import { CocktailIcon } from './icons/CocktailIcon';
-import { FoodIcon } from './icons/FoodIcon';
+import { CategoryTabIcon } from './CategoryTabIcon';
 
 type Category = { slug: string; title: string };
 
@@ -10,17 +9,6 @@ type Props = {
   activeCategorySlug: string;
   onSelect: (slug: string) => void;
 };
-
-function CategoryIcon({ slug, isActive }: { slug: string; isActive: boolean }) {
-  const iconClass = isActive ? 'text-surface-cream' : 'text-brand-bg';
-  const lowerSlug = slug.toLowerCase();
-
-  if (lowerSlug.includes('kitchen') || lowerSlug.includes('food')) {
-    return <FoodIcon className={iconClass} />;
-  }
-
-  return <CocktailIcon className={iconClass} />;
-}
 
 export function CategoryTabs({ categories, activeCategorySlug, onSelect }: Props) {
   return (
@@ -46,7 +34,7 @@ export function CategoryTabs({ categories, activeCategorySlug, onSelect }: Props
             ].join(' ')}
           >
             <span>{cat.title}</span>
-            <CategoryIcon slug={cat.slug} isActive={isActive} />
+            <CategoryTabIcon slug={cat.slug} isActive={isActive} />
           </button>
         );
       })}

@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { formatPrice } from '@/lib/menu/format-price';
 import type { MenuItemPayload } from '@/lib/menu/types';
 import { MENU_CARD_HEIGHT_PX, MENU_CARD_RADIUS_PX } from './constants';
-import { ArrowUpRightIcon } from './icons/ArrowUpRightIcon';
 
 type Props = {
   item: MenuItemPayload;
@@ -44,32 +43,21 @@ export function MenuItemCard({ item, sectionLabel }: Props) {
         {sectionLabel}
       </span>
 
-      <button
-        type="button"
-        aria-label={`View ${item.name}`}
-        className={[
-          'absolute right-3.5 top-3.5 flex items-center justify-center',
-          'size-10 rounded-[20px] bg-[rgba(255,248,243,0.92)] text-text-primary',
-          'shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-opacity hover:opacity-90',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80',
-        ].join(' ')}
-      >
-        <ArrowUpRightIcon />
-      </button>
-
       <div className="absolute inset-x-0 bottom-0 px-5 pb-[17.6px] pt-4">
-        <h3 className="font-display text-[18.4px] font-bold leading-[1.25] text-surface-cream">
+        <h3 className="font-display text-[18.4px] font-bold leading-[1.25] text-white">
           {item.name}
         </h3>
 
-        <div className="mt-1 flex items-center justify-between gap-3 pt-1">
-          <span className="min-w-0 flex-1" />
-          {price && (
-            <p className="shrink-0 text-base font-bold text-brand-price" aria-label={`Price: ${price}`}>
+        {price && (
+          <div className="mt-1 flex items-end justify-end pt-1">
+            <p
+              className="font-sans text-base font-bold leading-6 text-brand-price"
+              aria-label={`Price: ${price}`}
+            >
               {price}
             </p>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </article>
   );

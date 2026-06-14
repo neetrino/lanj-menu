@@ -51,7 +51,7 @@ export function LanguageSwitcher({ currentLocale }: Props) {
   };
 
   return (
-    <div ref={containerRef} className="relative shrink-0 pt-1">
+    <div ref={containerRef} className="relative shrink-0">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}

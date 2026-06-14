@@ -2,23 +2,17 @@ import type { Locale } from '@/lib/i18n/config';
 
 const UI = {
   hy: {
-    goodDay: 'Բարի օր',
-    headingLine1: 'Ինչ կցանկանաք',
-    headingLine2: 'այսօր?',
+    heading: 'Ինչ կցանկանաք այսօր?',
     emptyCategory: 'Ապրանքներ չկան',
     noMenu: 'Ճաշացանկը հասանելի չէ',
   },
   ru: {
-    goodDay: 'Добрый день',
-    headingLine1: 'Что вы хотите',
-    headingLine2: 'сегодня?',
+    heading: 'Что вы хотите сегодня?',
     emptyCategory: 'Нет позиций',
     noMenu: 'Меню недоступно',
   },
   en: {
-    goodDay: 'Good day',
-    headingLine1: 'What would you',
-    headingLine2: 'like today?',
+    heading: 'What would you like today?',
     emptyCategory: 'No items available',
     noMenu: 'Menu not available',
   },

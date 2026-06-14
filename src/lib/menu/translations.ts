@@ -3,7 +3,7 @@ import type { Locale } from '@/lib/i18n/config';
 const UI = {
   hy: {
     goodDay: 'Բարի օր',
-    headingLine1: 'Ինչ կցանկանեք',
+    headingLine1: 'Ինչ կցանկանաք',
     headingLine2: 'այսօր?',
     emptyCategory: 'Ապրանքներ չկան',
     noMenu: 'Ճաշացանկը հասանելի չէ',

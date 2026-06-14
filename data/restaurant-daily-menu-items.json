@@ -292,14 +292,13 @@
   },
   {
     "slug": "pasta-carbonara",
-    "photo": "YPP_3351.jpg",
+    "photo": "photo_2026-06-14 22.11.34.jpeg",
     "price": 3500,
     "name": {
       "hy": "Պաստա կարբոնարա",
       "ru": "Паста карбонара",
       "en": "Pasta Carbonara"
-    },
-    "note": "Shares creamy pasta photo until dedicated shot is available"
+    }
   },
   {
     "slug": "pasta-shrimp",

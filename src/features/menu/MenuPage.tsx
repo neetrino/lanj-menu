@@ -93,7 +93,7 @@ export function MenuPage({ menuPayload, locale, sectionSlug, categorySlug }: Pro
       />
 
       <main
-        className="px-5 pb-24 pt-[var(--menu-header-height,0px)] lg:px-10 lg:pt-0"
+        className="px-5 pb-24 lg:px-10"
         id="main-content"
       >
         {!activeCategory ? (

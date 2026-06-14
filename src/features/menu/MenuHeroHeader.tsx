@@ -10,13 +10,9 @@ export function MenuHeroTitle({ locale }: Props) {
   const t = getUiTranslations(locale);
 
   return (
-    <div className="min-w-0">
-      <p className="text-[11.5px] font-normal uppercase tracking-[0.15em] text-text-muted leading-[1.5]">
-        {t.goodDay}
-      </p>
-      <h1 className="mt-1 font-display text-[29.6px] leading-[1.15] text-text-primary">
-        <span className="block">{t.headingLine1}</span>
-        <span className="block">{t.headingLine2}</span>
+    <div className="min-w-0 flex-1">
+      <h1 className="truncate font-display text-[22px] leading-[1.35] text-text-primary lg:text-[29.6px] lg:leading-[1.15]">
+        {t.heading}
       </h1>
     </div>
   );
@@ -24,7 +20,7 @@ export function MenuHeroTitle({ locale }: Props) {
 
 export function MenuHeroHeader({ locale }: Props) {
   return (
-    <div className="flex items-start justify-between gap-4">
+    <div className="flex items-center justify-between gap-3">
       <MenuHeroTitle locale={locale} />
       <LanguageSwitcher currentLocale={locale} />
     </div>

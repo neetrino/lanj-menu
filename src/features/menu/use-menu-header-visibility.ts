@@ -11,29 +11,38 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+type MenuTabsBarState = {
+  isTabsVisible: boolean;
+  tabsTop: number;
+};
+
 /**
- * Returns whether the mobile menu header should be visible.
- * Hides on scroll down, reveals on scroll up or near the top of the page.
+ * Standard mobile tab bar behavior: hides on scroll down, shows on scroll up.
+ * `tabsTop` keeps the bar below the hero at the page top, then pins to y=0.
  */
-export function useMenuHeaderVisibility(): boolean {
-  const [isVisible, setIsVisible] = useState(true);
+export function useMenuTabsBar(heroHeight: number): MenuTabsBarState {
+  const [isTabsVisible, setIsTabsVisible] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    if (prefersReducedMotion()) return;
-
     lastScrollY.current = window.scrollY;
+    setScrollY(window.scrollY);
+
+    if (prefersReducedMotion()) return;
 
     const onScroll = () => {
       const currentScrollY = window.scrollY;
       const delta = currentScrollY - lastScrollY.current;
 
+      setScrollY(currentScrollY);
+
       if (currentScrollY <= MENU_HEADER_SCROLL_TOP_VISIBLE_PX) {
-        setIsVisible(true);
+        setIsTabsVisible(true);
       } else if (delta < -MENU_HEADER_SCROLL_DIRECTION_DELTA_PX) {
-        setIsVisible(true);
+        setIsTabsVisible(true);
       } else if (delta > MENU_HEADER_SCROLL_DIRECTION_DELTA_PX) {
-        setIsVisible(false);
+        setIsTabsVisible(false);
       }
 
       lastScrollY.current = currentScrollY;
@@ -43,5 +52,7 @@ export function useMenuHeaderVisibility(): boolean {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  return isVisible;
+  const tabsTop = Math.max(0, heroHeight - scrollY);
+
+  return { isTabsVisible, tabsTop };
 }

@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { CategoryTabs } from './CategoryTabs';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { MenuHeroHeader, MenuHeroTitle } from './MenuHeroHeader';
 import { SectionTabs } from './SectionTabs';
 import { MENU_HEADER_TRANSITION_MS } from './menu-header-scroll.constants';
 import { useElementHeight } from './use-element-height';
-import { useMenuHeaderVisibility } from './use-menu-header-visibility';
+import { useMenuTabsBar } from './use-menu-header-visibility';
 import type { Locale } from '@/lib/i18n/config';
 import type { MenuSectionPayload } from '@/lib/menu/types';
 
@@ -28,86 +28,87 @@ export function MenuHeader({
   onSectionSelect,
   onCategorySelect,
 }: Props) {
-  const headerRef = useRef<HTMLElement>(null);
-  const headerHeight = useElementHeight(headerRef);
-  const isVisible = useMenuHeaderVisibility();
-
-  useEffect(() => {
-    if (headerHeight <= 0) return;
-
-    document.documentElement.style.setProperty(
-      '--menu-header-height',
-      `${headerHeight}px`,
-    );
-
-    return () => {
-      document.documentElement.style.removeProperty('--menu-header-height');
-    };
-  }, [headerHeight]);
+  const heroRef = useRef<HTMLElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const heroHeight = useElementHeight(heroRef);
+  const tabsHeight = useElementHeight(tabsRef);
+  const { isTabsVisible, tabsTop } = useMenuTabsBar(heroHeight);
 
   const activeSection = sections.find((s) => s.slug === activeSectionSlug);
   const categories = activeSection?.categories ?? [];
 
-  const headerContent = (
-    <>
-      <div className="lg:hidden">
-        <MenuHeroHeader locale={locale} />
+  const sectionTabs =
+    sections.length > 0 ? (
+      <SectionTabs
+        sections={sections}
+        activeSectionSlug={activeSectionSlug}
+        onSelect={onSectionSelect}
+      />
+    ) : null;
 
-        {sections.length > 0 && (
-          <div className="mt-7">
-            <SectionTabs
-              sections={sections}
-              activeSectionSlug={activeSectionSlug}
-              onSelect={onSectionSelect}
-            />
-          </div>
-        )}
-      </div>
+  const categoryTabs =
+    categories.length > 0 ? (
+      <CategoryTabs
+        categories={categories}
+        activeCategorySlug={activeCategorySlug}
+        onSelect={onCategorySelect}
+      />
+    ) : null;
 
-      <div className="hidden lg:flex lg:items-center lg:gap-10 lg:border-b lg:border-black/5 lg:pb-6">
-        <MenuHeroTitle locale={locale} />
-
-        {sections.length > 0 && (
-          <div className="min-w-0 flex-1">
-            <SectionTabs
-              sections={sections}
-              activeSectionSlug={activeSectionSlug}
-              onSelect={onSectionSelect}
-            />
-          </div>
-        )}
-
-        <LanguageSwitcher currentLocale={locale} />
-      </div>
-
-      {categories.length > 0 && (
-        <CategoryTabs
-          categories={categories}
-          activeCategorySlug={activeCategorySlug}
-          onSelect={onCategorySelect}
-        />
-      )}
-    </>
-  );
+  const hasMobileTabs = sectionTabs !== null || categoryTabs !== null;
 
   return (
     <>
-      <div
-        className={[
-          'fixed inset-x-0 top-0 z-50 flex justify-center lg:static',
-          'transition-transform ease-out motion-reduce:transition-none',
-          isVisible ? 'translate-y-0' : '-translate-y-full lg:translate-y-0',
-        ].join(' ')}
-        style={{ transitionDuration: `${MENU_HEADER_TRANSITION_MS}ms` }}
-      >
+      <div className="lg:hidden">
         <header
-          ref={headerRef}
-          className="w-full max-w-[430px] bg-surface-page px-6 pt-14 lg:max-w-none lg:px-10 lg:pt-8"
+          ref={heroRef}
+          className="w-full bg-surface-page px-6 pb-4 pt-[max(0.75rem,env(safe-area-inset-top))]"
           role="banner"
         >
-          {headerContent}
+          <MenuHeroHeader locale={locale} />
         </header>
+
+        {hasMobileTabs && (
+          <div aria-hidden style={{ height: tabsHeight }} />
+        )}
       </div>
+
+      {hasMobileTabs && (
+        <div
+          className={[
+            'fixed inset-x-0 z-40 flex justify-center lg:hidden',
+            'transition-transform ease-out motion-reduce:transition-none',
+            isTabsVisible ? 'translate-y-0' : '-translate-y-full',
+          ].join(' ')}
+          style={{
+            top: tabsTop,
+            transitionDuration: `${MENU_HEADER_TRANSITION_MS}ms`,
+          }}
+        >
+          <div
+            ref={tabsRef}
+            className="w-full max-w-[430px] bg-surface-page px-6"
+          >
+            {sectionTabs}
+            {categoryTabs}
+          </div>
+        </div>
+      )}
+
+      <header
+        className="hidden w-full bg-surface-page px-10 pt-8 lg:block"
+        role="banner"
+      >
+        <div className="flex items-center gap-10 border-b border-black/5 pb-6">
+          <MenuHeroTitle locale={locale} />
+
+          {sectionTabs && <div className="min-w-0 flex-1">{sectionTabs}</div>}
+
+          <LanguageSwitcher currentLocale={locale} />
+        </div>
+
+        {categoryTabs}
+      </header>
     </>
   );
 }

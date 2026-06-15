@@ -7,12 +7,11 @@ const envPath = path.resolve(process.cwd(), '.env');
 dotenv.config({ path: envPath, override: true });
 
 const R2_PLACEHOLDER_KEY = 'menu-items/pool-menu-drinks-placeholder.webp';
-const LOCAL_PLACEHOLDER_URL = '/images/placeholders/pool-menu-drinks-placeholder.webp';
 
 function resolveSharedImageUrl() {
   const r2PublicUrl = process.env.R2_PUBLIC_URL?.trim();
   if (!r2PublicUrl) {
-    return LOCAL_PLACEHOLDER_URL;
+    throw new Error('Missing required env var: R2_PUBLIC_URL');
   }
   return `${r2PublicUrl.replace(/\/$/, '')}/${R2_PLACEHOLDER_KEY}`;
 }

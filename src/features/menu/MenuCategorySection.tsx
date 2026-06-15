@@ -1,13 +1,15 @@
 import { MenuCategoryItemList } from './MenuCategoryItemList';
 import { EmptyState } from './EmptyState';
 import type { MenuCategoryPayload } from '@/lib/menu/types';
+import type { MenuViewMode } from '@/lib/menu/types';
 
 type Props = {
   category: MenuCategoryPayload;
   emptyMessage?: string;
+  viewMode: MenuViewMode;
 };
 
-export function MenuCategorySection({ category, emptyMessage }: Props) {
+export function MenuCategorySection({ category, emptyMessage, viewMode }: Props) {
   return (
     <section
       id={`category-${category.slug}`}
@@ -25,6 +27,7 @@ export function MenuCategorySection({ category, emptyMessage }: Props) {
           items={category.items}
           categoryLabel={category.title}
           categorySlug={category.slug}
+          viewMode={viewMode}
         />
       )}
     </section>

@@ -5,6 +5,8 @@ export type MenuItemPayload = {
   price: number | null;
 };
 
+export type MenuViewMode = 'cards' | 'text';
+
 export type MenuCategoryPayload = {
   slug: string;
   title: string;

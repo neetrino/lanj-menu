@@ -11,7 +11,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --project tsconfig.typecheck.json --noEmit --incremental false",
     "test": "vitest run",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
     "prisma:generate": "prisma generate",
@@ -19,6 +19,7 @@
     "prisma:studio": "prisma studio",
     "db:push": "prisma db push",
     "db:seed": "node scripts/seed-menu-structure.mjs",
+    "db:import-lanj-pool": "node scripts/import-lanj-pool-menu.mjs",
     "db:restore-menu": "node scripts/restore-real-menu-items.mjs",
     "db:sync-menu": "node scripts/sync-menu-items.mjs",
     "postinstall": "prisma generate"

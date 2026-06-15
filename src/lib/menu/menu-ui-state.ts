@@ -1,4 +1,5 @@
 import type { MenuSectionPayload } from './types';
+import type { MenuViewMode } from './types';
 
 const STORAGE_KEY = 'lanj-menu-ui-state';
 
@@ -7,6 +8,7 @@ export type MenuUiState = {
   categorySlug: string;
   scrollY: number;
   visibleCounts: Record<string, number>;
+  viewMode: MenuViewMode;
 };
 
 const EMPTY_STATE: MenuUiState = {
@@ -14,6 +16,7 @@ const EMPTY_STATE: MenuUiState = {
   categorySlug: '',
   scrollY: 0,
   visibleCounts: {},
+  viewMode: 'cards',
 };
 
 function isBrowser(): boolean {
@@ -74,6 +77,14 @@ export function setCategoryVisibleCount(categorySlug: string, count: number): vo
 
 export function getCategoryVisibleCount(categorySlug: string): number | undefined {
   return readState().visibleCounts[categorySlug];
+}
+
+export function getMenuViewMode(): MenuViewMode {
+  return readState().viewMode;
+}
+
+export function setMenuViewMode(mode: MenuViewMode): void {
+  patchMenuUiState({ viewMode: mode });
 }
 
 export type MenuTabSlugs = {

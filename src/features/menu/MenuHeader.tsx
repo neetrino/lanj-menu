@@ -4,11 +4,13 @@ import { useRef } from 'react';
 import { CategoryTabs } from './CategoryTabs';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { MenuHeroHeader, MenuHeroTitle } from './MenuHeroHeader';
+import { MenuViewToggle } from './MenuViewToggle';
 import { SectionTabs } from './SectionTabs';
 import { MENU_HEADER_TRANSITION_MS } from './menu-header-scroll.constants';
 import { useElementHeight } from './use-element-height';
 import { useMenuTabsBar } from './use-menu-header-visibility';
 import type { Locale } from '@/lib/i18n/config';
+import type { MenuViewMode } from '@/lib/menu/types';
 import type { MenuSectionPayload } from '@/lib/menu/types';
 
 type Props = {
@@ -18,6 +20,8 @@ type Props = {
   activeCategorySlug: string;
   onSectionSelect: (slug: string) => void;
   onCategorySelect: (slug: string) => void;
+  viewMode: MenuViewMode;
+  onViewModeChange: (mode: MenuViewMode) => void;
 };
 
 export function MenuHeader({
@@ -27,6 +31,8 @@ export function MenuHeader({
   activeCategorySlug,
   onSectionSelect,
   onCategorySelect,
+  viewMode,
+  onViewModeChange,
 }: Props) {
   const heroRef = useRef<HTMLElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
@@ -65,7 +71,11 @@ export function MenuHeader({
           className="w-full bg-surface-page px-6 pb-4 pt-[max(0.75rem,env(safe-area-inset-top))]"
           role="banner"
         >
-          <MenuHeroHeader locale={locale} />
+          <MenuHeroHeader
+            locale={locale}
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
+          />
         </header>
 
         {hasMobileTabs && (
@@ -99,11 +109,12 @@ export function MenuHeader({
         className="hidden w-full bg-surface-page px-10 pt-8 lg:block"
         role="banner"
       >
-        <div className="flex items-center gap-10 border-b border-black/5 pb-6">
+        <div className="flex items-center gap-6 border-b border-black/5 pb-6">
           <MenuHeroTitle locale={locale} />
 
           {sectionTabs && <div className="min-w-0 flex-1">{sectionTabs}</div>}
 
+          <MenuViewToggle viewMode={viewMode} onChange={onViewModeChange} />
           <LanguageSwitcher currentLocale={locale} />
         </div>
 

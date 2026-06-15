@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MenuHeader } from './MenuHeader';
 import { MenuCategorySection } from './MenuCategorySection';
@@ -10,10 +11,13 @@ import { getUiTranslations } from '@/lib/menu/translations';
 import { buildMenuPath } from '@/lib/menu/menu-routes';
 import {
   captureMenuScrollPosition,
+  getMenuViewMode,
   patchMenuUiState,
   restoreMenuScrollPosition,
+  setMenuViewMode,
 } from '@/lib/menu/menu-ui-state';
 import type { MenuPayload } from '@/lib/menu/types';
+import type { MenuViewMode } from '@/lib/menu/types';
 import type { Locale } from '@/lib/i18n/config';
 
 type Props = {
@@ -27,6 +31,7 @@ export function MenuPage({ menuPayload, locale, sectionSlug, categorySlug }: Pro
   const router = useRouter();
   const { sections } = menuPayload;
   const t = getUiTranslations(locale);
+  const [viewMode, setViewMode] = useState<MenuViewMode>('cards');
 
   const activeSection = sections.find((section) => section.slug === sectionSlug);
   const categories = activeSection?.categories ?? [];
@@ -39,11 +44,19 @@ export function MenuPage({ menuPayload, locale, sectionSlug, categorySlug }: Pro
   }, []);
 
   useEffect(() => {
+    setViewMode(getMenuViewMode());
+  }, []);
+
+  useEffect(() => {
     patchMenuUiState({
       sectionSlug,
       categorySlug,
     });
   }, [sectionSlug, categorySlug]);
+
+  useEffect(() => {
+    setMenuViewMode(viewMode);
+  }, [viewMode]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -90,6 +103,8 @@ export function MenuPage({ menuPayload, locale, sectionSlug, categorySlug }: Pro
         activeCategorySlug={categorySlug}
         onSectionSelect={handleSectionSelect}
         onCategorySelect={handleCategorySelect}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
 
       <main
@@ -102,6 +117,7 @@ export function MenuPage({ menuPayload, locale, sectionSlug, categorySlug }: Pro
           <MenuCategorySection
             category={activeCategory}
             emptyMessage={t.emptyCategory}
+            viewMode={viewMode}
           />
         )}
       </main>

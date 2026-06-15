@@ -67,24 +67,6 @@ const DEMO_SECTIONS = [
     title: mk('Ռեստորան', 'Ресторан', 'Restaurant'),
     categories: [
       {
-        slug: 'bar-menu',
-        title: mk('Բարի մենյու', 'Бар-меню', 'Bar Menu'),
-        items: [
-          {
-            slug: 'house-red-wine',
-            name: mk('Տնային կարմիր գինի', 'Домашнее красное вино', 'House Red Wine'),
-            imageUrl: null,
-            price: 9000,
-          },
-          {
-            slug: 'classic-negroni',
-            name: mk('Կլասիկ նեգրոնի', 'Классический негрони', 'Classic Negroni'),
-            imageUrl: null,
-            price: 13000,
-          },
-        ],
-      },
-      {
         slug: 'kitchen',
         title: mk('Խոհանոց', 'Кухня', 'Kitchen'),
         items: [
@@ -99,6 +81,24 @@ const DEMO_SECTIONS = [
             name: mk('Պաստա կարբոնարա', 'Паста карбонара', 'Pasta Carbonara'),
             imageUrl: null,
             price: 12500,
+          },
+        ],
+      },
+      {
+        slug: 'bar-menu',
+        title: mk('Բարի մենյու', 'Бар-меню', 'Bar Menu'),
+        items: [
+          {
+            slug: 'house-red-wine',
+            name: mk('Տնային կարմիր գինի', 'Домашнее красное вино', 'House Red Wine'),
+            imageUrl: null,
+            price: 9000,
+          },
+          {
+            slug: 'classic-negroni',
+            name: mk('Կլասիկ նեգրոնի', 'Классический негрони', 'Classic Negroni'),
+            imageUrl: null,
+            price: 13000,
           },
         ],
       },

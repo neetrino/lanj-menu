@@ -52,21 +52,21 @@ const SECTIONS = [
     },
     categories: [
       {
-        slug: 'bar-menu',
-        sortOrder: 0,
-        title: {
-          hy: 'Բարի մենյու',
-          ru: 'Бар-меню',
-          en: 'Bar Menu',
-        },
-      },
-      {
         slug: 'kitchen',
-        sortOrder: 1,
+        sortOrder: 0,
         title: {
           hy: 'Խոհանոց',
           ru: 'Кухня',
           en: 'Kitchen',
+        },
+      },
+      {
+        slug: 'bar-menu',
+        sortOrder: 1,
+        title: {
+          hy: 'Բարի մենյու',
+          ru: 'Бар-меню',
+          en: 'Bar Menu',
         },
       },
     ],

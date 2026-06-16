@@ -11,9 +11,12 @@ export function MenuItemTextRow({ item }: Props) {
 
   return (
     <article className="flex items-end gap-2 py-2.5 text-text-primary">
-      <h3 className="min-w-0 shrink break-words text-[15px] font-medium leading-6 sm:text-base">
-        {item.name}
-      </h3>
+      <div className="min-w-0 shrink">
+        <h3 className="break-words text-[15px] font-medium leading-6 sm:text-base">{item.name}</h3>
+        {item.categoryTitle ? (
+          <p className="text-[12px] font-medium leading-4 text-text-secondary">{item.categoryTitle}</p>
+        ) : null}
+      </div>
       {hasPrice && (
         <>
           <span

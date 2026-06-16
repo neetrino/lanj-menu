@@ -71,6 +71,16 @@ function normalizeMenuStructure(menuPayload: MenuPayload): MenuPayload {
       }
 
       const categories = section.categories.map((category) => {
+        if (category.slug === 'kitchen') {
+          return {
+            ...category,
+            items: category.items.map((item) => ({
+              ...item,
+              categoryTitle: getRestaurantKitchenSubcategoryTitle(item.slug) ?? undefined,
+            })),
+          };
+        }
+
         if (category.slug !== 'bar-menu') {
           return category;
         }
@@ -87,6 +97,16 @@ function normalizeMenuStructure(menuPayload: MenuPayload): MenuPayload {
       };
     }),
   };
+}
+
+function getRestaurantKitchenSubcategoryTitle(itemSlug: string): string | null {
+  if (RESTAURANT_KITCHEN_APPETIZER_SLUGS.has(itemSlug)) {
+    return 'Նախուտեստներ';
+  }
+  if (RESTAURANT_KITCHEN_SALAD_SLUGS.has(itemSlug)) {
+    return 'Աղցաներ';
+  }
+  return 'Տաք ուտեստներ';
 }
 
 function buildPoolBarMenuCategory(categories: MenuCategoryPayload[]): MenuCategoryPayload | null {
@@ -111,3 +131,28 @@ function buildPoolBarMenuCategory(categories: MenuCategoryPayload[]): MenuCatego
     items: mergedItems,
   };
 }
+
+const RESTAURANT_KITCHEN_APPETIZER_SLUGS = new Set([
+  'appetizer-set',
+  'tomato-bruschetta',
+  'salmon-bruschetta',
+  'olives',
+  'european-cheese-board',
+  'fried-cheese',
+  'stuffed-vegetables',
+  'calamari-rings',
+  'shrimp-tempura',
+  'chicken-nuggets',
+  'seafood-platter',
+]);
+
+const RESTAURANT_KITCHEN_SALAD_SLUGS = new Set([
+  'lanj-salad',
+  'greek-salad',
+  'caesar-salad',
+  'shrimp-caesar',
+  'caprese',
+  'beef-salad',
+  'vegetable-bouquet',
+  'thai-beef',
+]);

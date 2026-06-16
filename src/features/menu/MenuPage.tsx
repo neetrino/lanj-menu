@@ -134,7 +134,8 @@ export function MenuPage({ menuPayload, locale, sectionSlug, categorySlug }: Pro
           <EmptyState message={t.emptyCategory} />
         ) : (
           <>
-            {activeCategory.slug === 'bar-menu' && subcategories.length > 0 ? (
+            {(activeCategory.slug === 'bar-menu' || activeCategory.slug === 'kitchen') &&
+            subcategories.length > 0 ? (
               <SubcategoryTabs
                 subcategories={subcategories}
                 activeSubcategory={activeSubcategory}

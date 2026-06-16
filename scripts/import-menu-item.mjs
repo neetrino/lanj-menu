@@ -108,7 +108,7 @@ async function main() {
       create: {
         slug: 'pool-menu',
         title: {
-          hy: 'Լողավազանի մենյու',
+          hy: 'Լողավազան',
           ru: 'Меню бассейна',
           en: 'Pool Menu',
         },
@@ -184,3 +184,4 @@ main().catch((error) => {
   console.error(error.message);
   process.exit(1);
 });
+

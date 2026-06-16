@@ -25,10 +25,15 @@ const TAB_BASE_CLASS = [
 ].join(' ');
 
 export function CategoryTabs({ categories, activeCategorySlug, onSelect }: Props) {
+  const shouldCenterOnMobile = categories.length <= 2;
+
   return (
     <nav
       aria-label="Menu categories"
-      className="flex gap-2 overflow-x-auto scrollbar-hide py-3 lg:overflow-visible lg:py-5"
+      className={[
+        'flex gap-2 overflow-x-auto scrollbar-hide py-3 lg:overflow-visible lg:py-5',
+        shouldCenterOnMobile ? 'justify-center' : '',
+      ].join(' ')}
     >
       {categories.map((cat) => {
         const isActive = cat.slug === activeCategorySlug;

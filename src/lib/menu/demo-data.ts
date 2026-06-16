@@ -10,7 +10,7 @@ function mk(hy: string, ru: string, en: string): T {
 const DEMO_SECTIONS = [
   {
     slug: 'pool-menu',
-    title: mk('Լողավազանի մենյու', 'Меню бассейна', 'Pool Menu'),
+    title: mk('Լողավազան', 'Меню бассейна', 'Pool Menu'),
     categories: [
       {
         slug: 'bar-menu',
@@ -124,3 +124,4 @@ export function getDemoMenu(locale: Locale): MenuPayload {
     })),
   };
 }
+

@@ -85,7 +85,7 @@
     "photo": "YPP_3190.jpg",
     "price": 3000,
     "name": {
-      "hy": "Բրուսկետտա լոլիկով",
+      "hy": "Բրուսկետա լոլիկով",
       "ru": "Брускетта с помидорами",
       "en": "Tomato Bruschetta"
     }
@@ -221,13 +221,13 @@
     }
   },
   {
-    "slug": "chicken-roquefort",
+    "slug": "chicken-roast-beef",
     "photo": "YPP_3279.jpg",
     "price": 4200,
     "name": {
-      "hy": "Հավ ռոքֆորտ",
-      "ru": "Курица с рокфором",
-      "en": "Chicken Roquefort"
+      "hy": "Հավ ռոզբիֆ",
+      "ru": "Курица ростбиф",
+      "en": "Chicken Roast Beef"
     }
   },
   {
@@ -315,7 +315,7 @@
     "photo": "YPP_3363.jpg",
     "price": 9000,
     "name": {
-      "hy": "Տավարի միլիոն",
+      "hy": "Տավարի մինիոն",
       "ru": "Говяжье медальон",
       "en": "Beef Medallions"
     }
@@ -335,7 +335,7 @@
     "photo": "YPP_3346.jpg",
     "price": 6000,
     "name": {
-      "hy": "Վիեննական ռիբս",
+      "hy": "Վիենական ռիբս",
       "ru": "Венские рёбрышки",
       "en": "Viennese Ribs"
     }

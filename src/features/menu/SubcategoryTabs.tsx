@@ -8,14 +8,14 @@ type Props = {
 };
 
 const ACTIVE_TAB_CLASS =
-  'border border-transparent bg-[#1a0c06] px-[17.6px] py-2 !text-[#fff8f3]';
+  'border border-transparent bg-[#1a0c06] px-3 py-[6px] !text-[#fff8f3]';
 
 const INACTIVE_TAB_CLASS =
-  'border-[1.427px] border-[#ffa97f] bg-transparent px-[19.027px] py-[9.427px] !text-[#faaa77]';
+  'border border-[#ffa97f] bg-transparent px-3 py-[6px] !text-[#faaa77]';
 
 const TAB_BASE_CLASS = [
   'flex shrink-0 items-center justify-center rounded-full',
-  'text-[12.8px] font-semibold leading-[19.2px] whitespace-nowrap transition-colors',
+  'text-[12px] font-semibold leading-[18px] whitespace-nowrap transition-colors',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c4673a]/40',
 ].join(' ');
 

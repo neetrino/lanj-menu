@@ -17,7 +17,7 @@ const SECTIONS = [
     slug: 'pool-menu',
     sortOrder: 0,
     title: {
-      hy: 'Լողավազանի մենյու',
+      hy: 'Լողավազան',
       ru: 'Меню бассейна',
       en: 'Pool Menu',
     },
@@ -171,3 +171,4 @@ main().catch((error) => {
   console.error(error.message);
   process.exit(1);
 });
+

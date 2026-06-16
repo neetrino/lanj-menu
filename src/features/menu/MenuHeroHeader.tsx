@@ -16,9 +16,9 @@ export function MenuHeroTitle() {
       <Image
         src="/icon.png"
         alt="Lanj logo"
-        width={152}
-        height={40}
-        className="h-8 w-auto sm:h-9 lg:h-10"
+        width={196}
+        height={56}
+        className="h-11 w-auto sm:h-12 lg:h-14"
         priority
       />
     </div>

@@ -11,11 +11,12 @@ type Props = {
 type ModeOption = {
   value: MenuViewMode;
   label: string;
+  icon: () => ReturnType<typeof GridIcon>;
 };
 
 const MODE_OPTIONS: ModeOption[] = [
-  { value: 'cards', label: 'Cards' },
-  { value: 'text', label: 'Text' },
+  { value: 'cards', label: 'Cards', icon: GridIcon },
+  { value: 'text', label: 'Text', icon: ListIcon },
 ];
 
 function ListIcon() {
@@ -61,53 +62,38 @@ function GridIcon() {
 }
 
 export function MenuViewToggle({ viewMode, onChange }: Props) {
-  const nextMode: MenuViewMode = viewMode === 'cards' ? 'text' : 'cards';
-  const mobileAriaLabel =
-    viewMode === 'cards' ? 'Switch to text view' : 'Switch to card view';
-
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => onChange(nextMode)}
-        aria-label={mobileAriaLabel}
-        className={[
-          'inline-flex items-center justify-center rounded-full bg-brand-bg text-text-primary lg:hidden',
-          'transition-opacity hover:opacity-90',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50',
-        ].join(' ')}
-        style={{
-          width: `${LANGUAGE_BUTTON_SIZE_PX}px`,
-          height: `${LANGUAGE_BUTTON_SIZE_PX}px`,
-        }}
-      >
-        {viewMode === 'cards' ? <ListIcon /> : <GridIcon />}
-      </button>
-
-      <div
-        className="hidden rounded-full bg-brand-bg p-1 lg:inline-flex"
-        role="group"
-        aria-label="Menu view mode"
-      >
-        {MODE_OPTIONS.map((option) => {
-          const isActive = option.value === viewMode;
-          return (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => onChange(option.value)}
-              aria-pressed={isActive}
-              className={[
-                'rounded-full px-3 py-1.5 text-xs font-semibold transition-colors sm:px-4 sm:text-sm',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/40',
-                isActive ? 'bg-white text-text-primary' : 'text-white hover:bg-white/10',
-              ].join(' ')}
-            >
-              {option.label}
-            </button>
-          );
-        })}
-      </div>
-    </>
+    <div
+      className="inline-flex items-center gap-1 rounded-full bg-brand-bg p-1"
+      role="group"
+      aria-label="Menu view mode"
+    >
+      {MODE_OPTIONS.map((option) => {
+        const isActive = option.value === viewMode;
+        const Icon = option.icon;
+        return (
+          <button
+            key={option.value}
+            type="button"
+            onClick={() => onChange(option.value)}
+            aria-pressed={isActive}
+            aria-label={option.label}
+            className={[
+              'inline-flex items-center justify-center rounded-full transition-colors',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/40',
+              isActive
+                ? 'border border-brand-accent bg-white text-brand-accent'
+                : 'border border-transparent text-white hover:bg-white/10',
+            ].join(' ')}
+            style={{
+              width: `${LANGUAGE_BUTTON_SIZE_PX}px`,
+              height: `${LANGUAGE_BUTTON_SIZE_PX}px`,
+            }}
+          >
+            <Icon />
+          </button>
+        );
+      })}
+    </div>
   );
 }

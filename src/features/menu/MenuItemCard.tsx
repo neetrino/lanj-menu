@@ -50,16 +50,12 @@ export function MenuItemCard({ item, categoryLabel }: Props) {
       </span>
 
       <div className="absolute inset-x-0 bottom-0 px-5 pb-[17.6px] pt-4 text-white">
-        <h3 className="font-display text-[18.4px] font-bold leading-[1.25]">
-          {item.name}
-        </h3>
-
-        {price && (
-          <div className="flex items-center justify-between pt-1">
-            <span className="min-w-0 flex-1" />
-            <MenuItemPrice price={price} />
-          </div>
-        )}
+        <div className="flex items-end justify-between gap-3">
+          <h3 className="min-w-0 flex-1 font-display text-[18.4px] font-bold leading-[1.25]">
+            {item.name}
+          </h3>
+          {price ? <MenuItemPrice price={price} /> : null}
+        </div>
       </div>
     </article>
   );

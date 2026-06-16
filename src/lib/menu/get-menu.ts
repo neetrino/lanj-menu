@@ -13,42 +13,73 @@ import { getDemoMenu } from './demo-data';
  */
 export async function getMenu(locale: Locale): Promise<MenuPayload> {
   if (!process.env.DATABASE_URL) {
-    return normalizePoolMenuStructure(getDemoMenu(locale));
+    return normalizeMenuStructure(getDemoMenu(locale));
   }
 
   try {
     const { prisma } = await import('@/db/client');
     const snapshot = await prisma.menuSnapshot.findUnique({ where: { locale } });
     if (snapshot?.data) {
-      return normalizePoolMenuStructure(snapshot.data as MenuPayload);
+      return normalizeMenuStructure(snapshot.data as MenuPayload);
     }
     // No snapshot built yet — fallback to demo
-    return normalizePoolMenuStructure(getDemoMenu(locale));
+    return normalizeMenuStructure(getDemoMenu(locale));
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
       console.warn('[getMenu] DB unavailable, using demo data:', err);
     }
-    return normalizePoolMenuStructure(getDemoMenu(locale));
+    return normalizeMenuStructure(getDemoMenu(locale));
   }
 }
 
-function normalizePoolMenuStructure(menuPayload: MenuPayload): MenuPayload {
+function normalizeMenuStructure(menuPayload: MenuPayload): MenuPayload {
+  const normalizedSections = menuPayload.sections.map((section) => {
+    if (section.slug !== 'pool-menu') {
+      return section;
+    }
+
+    const kitchenCategory = section.categories.find((category) => category.slug === 'kitchen');
+    const barMenuCategory = buildPoolBarMenuCategory(section.categories);
+    const categories: MenuCategoryPayload[] = barMenuCategory
+      ? kitchenCategory
+        ? [kitchenCategory, barMenuCategory]
+        : [barMenuCategory]
+      : kitchenCategory
+        ? [kitchenCategory]
+        : section.categories;
+
+    return {
+      ...section,
+      categories,
+    };
+  });
+
+  const poolSection = normalizedSections.find((section) => section.slug === 'pool-menu');
+  const poolBarMenuCategory = poolSection?.categories.find((category) => category.slug === 'bar-menu');
+  if (!poolBarMenuCategory) {
+    return {
+      ...menuPayload,
+      sections: normalizedSections,
+    };
+  }
+
   return {
     ...menuPayload,
-    sections: menuPayload.sections.map((section) => {
-      if (section.slug !== 'pool-menu') {
+    sections: normalizedSections.map((section) => {
+      if (section.slug !== 'restaurant') {
         return section;
       }
 
-      const kitchenCategory = section.categories.find((category) => category.slug === 'kitchen');
-      const barMenuCategory = buildPoolBarMenuCategory(section.categories);
-      const categories: MenuCategoryPayload[] = barMenuCategory
-        ? kitchenCategory
-          ? [kitchenCategory, barMenuCategory]
-          : [barMenuCategory]
-        : kitchenCategory
-          ? [kitchenCategory]
-          : section.categories;
+      const categories = section.categories.map((category) => {
+        if (category.slug !== 'bar-menu') {
+          return category;
+        }
+
+        return {
+          ...poolBarMenuCategory,
+          items: poolBarMenuCategory.items.map((item) => ({ ...item })),
+        };
+      });
 
       return {
         ...section,

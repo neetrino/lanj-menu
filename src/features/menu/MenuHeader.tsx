@@ -110,7 +110,7 @@ export function MenuHeader({
         role="banner"
       >
         <div className="flex items-center gap-6 border-b border-black/5 pb-6">
-          <MenuHeroTitle locale={locale} />
+          <MenuHeroTitle />
 
           {sectionTabs && <div className="min-w-0 flex-1">{sectionTabs}</div>}
 

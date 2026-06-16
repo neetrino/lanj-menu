@@ -1,12 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useMemo } from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MenuHeader } from './MenuHeader';
 import { MenuCategorySection } from './MenuCategorySection';
 import { MenuPageContainer } from './MenuPageContainer';
+import { SubcategoryTabs } from './SubcategoryTabs';
 import { EmptyState } from './EmptyState';
+import { filterItemsBySubcategory, listSubcategoryTitles } from './menu-subcategories';
 import { getUiTranslations } from '@/lib/menu/translations';
 import { buildMenuPath } from '@/lib/menu/menu-routes';
 import {
@@ -32,10 +35,22 @@ export function MenuPage({ menuPayload, locale, sectionSlug, categorySlug }: Pro
   const { sections } = menuPayload;
   const t = getUiTranslations(locale);
   const [viewMode, setViewMode] = useState<MenuViewMode>('cards');
+  const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
 
   const activeSection = sections.find((section) => section.slug === sectionSlug);
   const categories = activeSection?.categories ?? [];
   const activeCategory = categories.find((category) => category.slug === categorySlug);
+  const subcategories = useMemo(
+    () => (activeCategory ? listSubcategoryTitles(activeCategory.items) : []),
+    [activeCategory],
+  );
+  const filteredItems = useMemo(
+    () =>
+      activeCategory
+        ? filterItemsBySubcategory(activeCategory.items, activeSubcategory)
+        : [],
+    [activeCategory, activeSubcategory],
+  );
 
   useEffect(() => {
     restoreMenuScrollPosition();
@@ -60,6 +75,10 @@ export function MenuPage({ menuPayload, locale, sectionSlug, categorySlug }: Pro
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [sectionSlug, categorySlug]);
+
+  useEffect(() => {
+    setActiveSubcategory(null);
   }, [sectionSlug, categorySlug]);
 
   useEffect(() => {
@@ -114,11 +133,24 @@ export function MenuPage({ menuPayload, locale, sectionSlug, categorySlug }: Pro
         {!activeCategory ? (
           <EmptyState message={t.emptyCategory} />
         ) : (
-          <MenuCategorySection
-            category={activeCategory}
-            emptyMessage={t.emptyCategory}
-            viewMode={viewMode}
-          />
+          <>
+            {activeCategory.slug === 'bar-menu' && subcategories.length > 0 ? (
+              <SubcategoryTabs
+                subcategories={subcategories}
+                activeSubcategory={activeSubcategory}
+                onSelect={setActiveSubcategory}
+                allLabel={locale === 'hy' ? 'Բոլորը' : locale === 'ru' ? 'Все' : 'All'}
+              />
+            ) : null}
+            <MenuCategorySection
+              category={{
+                ...activeCategory,
+                items: filteredItems,
+              }}
+              emptyMessage={t.emptyCategory}
+              viewMode={viewMode}
+            />
+          </>
         )}
       </main>
     </MenuPageContainer>

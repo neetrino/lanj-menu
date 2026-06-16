@@ -46,7 +46,7 @@ export function MenuItemCard({ item, categoryLabel }: Props) {
       <span
         className="absolute left-3.5 top-3.5 rounded-full bg-[rgba(255,248,243,0.88)] px-3 py-[7px] text-[10.88px] font-semibold text-brand-accent"
       >
-        {categoryLabel}
+        {item.categoryTitle ?? categoryLabel}
       </span>
 
       <div className="absolute inset-x-0 bottom-0 px-5 pb-[17.6px] pt-4 text-white">

@@ -35,6 +35,9 @@ const nextConfig: NextConfig = {
       {
         pathname: '/api/r2/image',
       },
+      {
+        pathname: '/icon.png',
+      },
     ],
     remotePatterns,
   },

@@ -3,6 +3,7 @@ export type MenuItemPayload = {
   name: string;
   imageUrl: string | null;
   price: number | null;
+  categoryTitle?: string;
 };
 
 export type MenuViewMode = 'cards' | 'text';

@@ -1,15 +1,21 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import dotenv from 'dotenv';
-import { S3Client, HeadObjectCommand, PutObjectCommand, CopyObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { S3Client, HeadObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { PrismaClient } from '@prisma/client';
+import { rebuildMenuSnapshots } from './rebuild-menu-snapshots.mjs';
 
 const envPath = path.resolve(process.cwd(), '.env');
 dotenv.config({ path: envPath, override: true });
 
-export const R2_PLACEHOLDER_KEY = 'menu-items/pool-menu-drinks-placeholder.webp';
+/** Versioned key busts stale CDN / _next/image caches when the placeholder changes. */
+export const R2_PLACEHOLDER_KEY = 'menu-items/pool-menu-drinks-placeholder-v2.png';
+
+const LEGACY_PLACEHOLDER_MARKERS = ['pool-menu-drinks-placeholder.webp'];
+
 const LOCAL_CANDIDATES = [
-  'public/images/placeholders/pool-menu-drinks-placeholder.webp',
   'public/images/placeholders/pool-menu-drinks-placeholder.png',
+  'public/images/placeholders/pool-menu-drinks-placeholder.webp',
   'public/images/placeholders/pool-menu-drinks-placeholder.jpg',
   'public/images/placeholders/pool-menu-drinks-placeholder.jpeg',
 ].map((relativePath) => path.resolve(process.cwd(), relativePath));
@@ -21,12 +27,6 @@ const EXTENSION_CONTENT_TYPE = {
   jpeg: 'image/jpeg',
 };
 
-/** Minimal valid 1×1 WebP — used when no local placeholder asset is present. */
-const FALLBACK_WEBP = Buffer.from(
-  'UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=',
-  'base64',
-);
-
 function getRequiredEnv(key) {
   const value = process.env[key];
   if (!value?.trim()) {
@@ -37,6 +37,12 @@ function getRequiredEnv(key) {
 
 export function resolveSharedImageProxyUrl() {
   return `/api/r2/image?key=${encodeURIComponent(R2_PLACEHOLDER_KEY)}`;
+}
+
+function isLegacyPlaceholderUrl(imageUrl) {
+  if (!imageUrl) return false;
+  if (imageUrl.includes(R2_PLACEHOLDER_KEY)) return false;
+  return LEGACY_PLACEHOLDER_MARKERS.some((marker) => imageUrl.includes(marker));
 }
 
 async function objectExists(s3, bucket, objectKey) {
@@ -63,29 +69,26 @@ async function readLocalPlaceholder() {
   return null;
 }
 
-async function readPlaceholderBody() {
-  const local = await readLocalPlaceholder();
-  if (local) return local;
-  return {
-    body: FALLBACK_WEBP,
-    contentType: 'image/webp',
-    filePath: null,
-  };
-}
+async function rebindLegacyPlaceholderReferences(prisma) {
+  const items = await prisma.menuItem.findMany({
+    where: { imageUrl: { not: null } },
+    select: { id: true, slug: true, imageUrl: true },
+  });
 
-async function findCopySourceKey(s3, bucket) {
-  const listed = await s3.send(
-    new ListObjectsV2Command({ Bucket: bucket, Prefix: 'menu-items/', MaxKeys: 50 }),
-  );
-  return (
-    listed.Contents?.find(
-      (entry) =>
-        entry.Key &&
-        entry.Key !== R2_PLACEHOLDER_KEY &&
-        entry.Key.endsWith('.png') &&
-        (entry.Size ?? 0) > 10_000,
-    )?.Key ?? null
-  );
+  const proxyUrl = resolveSharedImageProxyUrl();
+  const legacyItems = items.filter((item) => isLegacyPlaceholderUrl(item.imageUrl));
+  for (const item of legacyItems) {
+    await prisma.menuItem.update({
+      where: { id: item.id },
+      data: { imageUrl: proxyUrl },
+    });
+  }
+
+  if (legacyItems.length > 0) {
+    await rebuildMenuSnapshots(prisma);
+  }
+
+  return { updated: legacyItems.length, slugs: legacyItems.map((item) => item.slug) };
 }
 
 async function main() {
@@ -94,6 +97,7 @@ async function main() {
   const accessKeyId = getRequiredEnv('R2_ACCESS_KEY_ID');
   const secretAccessKey = getRequiredEnv('R2_SECRET_ACCESS_KEY');
   const bucket = getRequiredEnv('R2_BUCKET_NAME');
+  const databaseUrl = getRequiredEnv('DATABASE_URL');
   const r2PublicUrl = process.env.R2_PUBLIC_URL?.trim() ?? '';
 
   const s3 = new S3Client({
@@ -102,28 +106,15 @@ async function main() {
     credentials: { accessKeyId, secretAccessKey },
   });
 
-  const alreadyExists = await objectExists(s3, bucket, R2_PLACEHOLDER_KEY);
-  if (alreadyExists && !force) {
-    console.log(
-      JSON.stringify(
-        {
-          ok: true,
-          action: 'skipped',
-          key: R2_PLACEHOLDER_KEY,
-          proxyUrl: resolveSharedImageProxyUrl(),
-          publicUrl: r2PublicUrl
-            ? `${r2PublicUrl.replace(/\/$/, '')}/${R2_PLACEHOLDER_KEY}`
-            : null,
-        },
-        null,
-        2,
-      ),
+  const localPlaceholder = await readLocalPlaceholder();
+  if (!localPlaceholder) {
+    throw new Error(
+      'Missing local placeholder. Add public/images/placeholders/pool-menu-drinks-placeholder.png',
     );
-    return;
   }
 
-  const localPlaceholder = await readLocalPlaceholder();
-  if (localPlaceholder) {
+  const alreadyExists = await objectExists(s3, bucket, R2_PLACEHOLDER_KEY);
+  if (!alreadyExists || force) {
     await s3.send(
       new PutObjectCommand({
         Bucket: bucket,
@@ -132,12 +123,17 @@ async function main() {
         ContentType: localPlaceholder.contentType,
       }),
     );
+  }
+
+  const prisma = new PrismaClient({ datasources: { db: { url: databaseUrl } } });
+  try {
+    const rebindSummary = await rebindLegacyPlaceholderReferences(prisma);
 
     console.log(
       JSON.stringify(
         {
           ok: true,
-          action: force ? 'replaced-from-local' : 'uploaded-from-local',
+          action: alreadyExists && !force ? 'rebound-only' : force ? 'replaced-from-local' : 'uploaded-from-local',
           key: R2_PLACEHOLDER_KEY,
           bytes: localPlaceholder.body.length,
           source: localPlaceholder.filePath,
@@ -145,72 +141,15 @@ async function main() {
           publicUrl: r2PublicUrl
             ? `${r2PublicUrl.replace(/\/$/, '')}/${R2_PLACEHOLDER_KEY}`
             : null,
+          rebind: rebindSummary,
         },
         null,
         2,
       ),
     );
-    return;
+  } finally {
+    await prisma.$disconnect();
   }
-
-  const copySourceKey = await findCopySourceKey(s3, bucket);
-  if (copySourceKey) {
-    await s3.send(
-      new CopyObjectCommand({
-        Bucket: bucket,
-        Key: R2_PLACEHOLDER_KEY,
-        CopySource: `${bucket}/${copySourceKey}`,
-        ContentType: 'image/webp',
-        MetadataDirective: 'REPLACE',
-      }),
-    );
-
-    console.log(
-      JSON.stringify(
-        {
-          ok: true,
-          action: force ? 'replaced-from-copy' : 'uploaded-from-copy',
-          key: R2_PLACEHOLDER_KEY,
-          copySourceKey,
-          proxyUrl: resolveSharedImageProxyUrl(),
-          publicUrl: r2PublicUrl
-            ? `${r2PublicUrl.replace(/\/$/, '')}/${R2_PLACEHOLDER_KEY}`
-            : null,
-        },
-        null,
-        2,
-      ),
-    );
-    return;
-  }
-
-  const { body, contentType, filePath } = await readPlaceholderBody();
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: bucket,
-      Key: R2_PLACEHOLDER_KEY,
-      Body: body,
-      ContentType: contentType,
-    }),
-  );
-
-  console.log(
-    JSON.stringify(
-      {
-        ok: true,
-        action: 'uploaded',
-        key: R2_PLACEHOLDER_KEY,
-        bytes: body.length,
-        source: filePath ?? 'embedded-fallback',
-        proxyUrl: resolveSharedImageProxyUrl(),
-        publicUrl: r2PublicUrl
-          ? `${r2PublicUrl.replace(/\/$/, '')}/${R2_PLACEHOLDER_KEY}`
-          : null,
-      },
-      null,
-      2,
-    ),
-  );
 }
 
 const isDirectRun = process.argv[1]?.endsWith('ensure-pool-menu-placeholder.mjs');

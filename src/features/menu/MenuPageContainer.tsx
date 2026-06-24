@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { SiteFooter } from './SiteFooter';
 
 type Props = {
   children: ReactNode;
@@ -6,8 +7,9 @@ type Props = {
 
 export function MenuPageContainer({ children }: Props) {
   return (
-    <div className="mx-auto w-full min-h-screen max-w-[430px] bg-surface-page lg:max-w-none">
-      {children}
+    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-surface-page lg:max-w-none">
+      <div className="flex-1">{children}</div>
+      <SiteFooter />
     </div>
   );
 }

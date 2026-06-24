@@ -7,10 +7,19 @@ const envPath = path.resolve(process.cwd(), '.env');
 dotenv.config({ path: envPath, override: true });
 
 export const R2_PLACEHOLDER_KEY = 'menu-items/pool-menu-drinks-placeholder.webp';
-const LOCAL_FILE_PATH = path.resolve(
-  process.cwd(),
+const LOCAL_CANDIDATES = [
   'public/images/placeholders/pool-menu-drinks-placeholder.webp',
-);
+  'public/images/placeholders/pool-menu-drinks-placeholder.png',
+  'public/images/placeholders/pool-menu-drinks-placeholder.jpg',
+  'public/images/placeholders/pool-menu-drinks-placeholder.jpeg',
+].map((relativePath) => path.resolve(process.cwd(), relativePath));
+
+const EXTENSION_CONTENT_TYPE = {
+  webp: 'image/webp',
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+};
 
 /** Minimal valid 1×1 WebP — used when no local placeholder asset is present. */
 const FALLBACK_WEBP = Buffer.from(
@@ -39,12 +48,29 @@ async function objectExists(s3, bucket, objectKey) {
   }
 }
 
-async function readPlaceholderBody() {
-  try {
-    return await fs.readFile(LOCAL_FILE_PATH);
-  } catch {
-    return FALLBACK_WEBP;
+async function readLocalPlaceholder() {
+  for (const filePath of LOCAL_CANDIDATES) {
+    try {
+      const body = await fs.readFile(filePath);
+      const extension = filePath.split('.').pop()?.toLowerCase() ?? '';
+      const contentType = EXTENSION_CONTENT_TYPE[extension];
+      if (!contentType) continue;
+      return { body, contentType, filePath };
+    } catch {
+      // try next candidate
+    }
   }
+  return null;
+}
+
+async function readPlaceholderBody() {
+  const local = await readLocalPlaceholder();
+  if (local) return local;
+  return {
+    body: FALLBACK_WEBP,
+    contentType: 'image/webp',
+    filePath: null,
+  };
 }
 
 async function findCopySourceKey(s3, bucket) {
@@ -96,6 +122,37 @@ async function main() {
     return;
   }
 
+  const localPlaceholder = await readLocalPlaceholder();
+  if (localPlaceholder) {
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: bucket,
+        Key: R2_PLACEHOLDER_KEY,
+        Body: localPlaceholder.body,
+        ContentType: localPlaceholder.contentType,
+      }),
+    );
+
+    console.log(
+      JSON.stringify(
+        {
+          ok: true,
+          action: force ? 'replaced-from-local' : 'uploaded-from-local',
+          key: R2_PLACEHOLDER_KEY,
+          bytes: localPlaceholder.body.length,
+          source: localPlaceholder.filePath,
+          proxyUrl: resolveSharedImageProxyUrl(),
+          publicUrl: r2PublicUrl
+            ? `${r2PublicUrl.replace(/\/$/, '')}/${R2_PLACEHOLDER_KEY}`
+            : null,
+        },
+        null,
+        2,
+      ),
+    );
+    return;
+  }
+
   const copySourceKey = await findCopySourceKey(s3, bucket);
   if (copySourceKey) {
     await s3.send(
@@ -127,13 +184,13 @@ async function main() {
     return;
   }
 
-  const body = await readPlaceholderBody();
+  const { body, contentType, filePath } = await readPlaceholderBody();
   await s3.send(
     new PutObjectCommand({
       Bucket: bucket,
       Key: R2_PLACEHOLDER_KEY,
       Body: body,
-      ContentType: 'image/webp',
+      ContentType: contentType,
     }),
   );
 
@@ -144,7 +201,7 @@ async function main() {
         action: 'uploaded',
         key: R2_PLACEHOLDER_KEY,
         bytes: body.length,
-        source: body === FALLBACK_WEBP ? 'embedded-fallback' : LOCAL_FILE_PATH,
+        source: filePath ?? 'embedded-fallback',
         proxyUrl: resolveSharedImageProxyUrl(),
         publicUrl: r2PublicUrl
           ? `${r2PublicUrl.replace(/\/$/, '')}/${R2_PLACEHOLDER_KEY}`

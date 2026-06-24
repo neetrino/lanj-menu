@@ -14,8 +14,8 @@ describe('resolveMenuImageSrc', () => {
   it('converts proxied keys to R2 public URLs', () => {
     process.env.R2_PUBLIC_URL = 'https://pub-test.r2.dev/';
     expect(
-      resolveMenuImageSrc('/api/r2/image?key=menu-items%2Fpool-menu-drinks-placeholder.webp'),
-    ).toBe('https://pub-test.r2.dev/menu-items/pool-menu-drinks-placeholder.webp');
+      resolveMenuImageSrc('/api/r2/image?key=menu-items%2Fpool-menu-drinks-placeholder-v2.png'),
+    ).toBe('https://pub-test.r2.dev/menu-items/pool-menu-drinks-placeholder-v2.png');
   });
 
   it('returns proxy URL when R2_PUBLIC_URL is missing', () => {

@@ -2,15 +2,16 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import dotenv from 'dotenv';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { R2_PLACEHOLDER_KEY } from './ensure-pool-menu-placeholder.mjs';
 
 const envPath = path.resolve(process.cwd(), '.env');
 dotenv.config({ path: envPath, override: true });
 
 const LOCAL_FILE_PATH = path.resolve(
   process.cwd(),
-  'public/images/placeholders/pool-menu-drinks-placeholder.webp',
+  'public/images/placeholders/pool-menu-drinks-placeholder.png',
 );
-const R2_OBJECT_KEY = 'menu-items/pool-menu-drinks-placeholder.webp';
+const R2_OBJECT_KEY = R2_PLACEHOLDER_KEY;
 
 function getRequiredEnv(key) {
   const value = process.env[key];

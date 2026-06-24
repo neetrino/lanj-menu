@@ -7,7 +7,7 @@ import { rebuildMenuSnapshots } from './rebuild-menu-snapshots.mjs';
 const envPath = path.resolve(process.cwd(), '.env');
 dotenv.config({ path: envPath, override: true });
 
-const DEFAULT_FALLBACK_OBJECT_KEY = 'menu-items/pool-menu-drinks-placeholder.webp';
+const DEFAULT_FALLBACK_OBJECT_KEY = 'menu-items/pool-menu-drinks-placeholder-v2.png';
 
 function getRequiredEnv(key) {
   const value = process.env[key];

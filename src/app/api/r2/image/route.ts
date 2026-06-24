@@ -54,7 +54,8 @@ export async function GET(request: Request): Promise<Response> {
       status: 200,
       headers: {
         'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
+        ...(data.ETag ? { ETag: data.ETag } : {}),
         'X-Content-Type-Options': 'nosniff',
       },
     });

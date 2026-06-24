@@ -19,20 +19,12 @@ const IMPORTED_CATEGORY_SLUGS = [
   'bar-menu-gin',
 ];
 
-const R2_PLACEHOLDER_KEY = 'menu-items/pool-menu-drinks-placeholder.webp';
-
-function resolveSharedImageUrl() {
-  const r2PublicUrl = process.env.R2_PUBLIC_URL?.trim();
-  if (!r2PublicUrl) {
-    throw new Error('Missing required env var: R2_PUBLIC_URL');
-  }
-  return `${r2PublicUrl.replace(/\/$/, '')}/${R2_PLACEHOLDER_KEY}`;
-}
+import { resolveSharedImageProxyUrl } from './ensure-pool-menu-placeholder.mjs';
 
 async function main() {
   const prisma = new PrismaClient();
   try {
-    const expectedSharedImageUrl = resolveSharedImageUrl();
+    const expectedSharedImageUrl = resolveSharedImageProxyUrl();
     const poolSection = await prisma.menuSection.findUnique({
       where: { slug: 'pool-menu' },
       include: {

@@ -20,6 +20,8 @@
     "db:push": "prisma db push",
     "db:seed": "node scripts/seed-menu-structure.mjs",
     "db:import-lanj-pool": "node scripts/import-lanj-pool-menu.mjs",
+    "db:ensure-pool-placeholder": "node scripts/ensure-pool-menu-placeholder.mjs",
+    "db:rewrite-image-urls": "node scripts/rewrite-image-urls.mjs",
     "db:restore-menu": "node scripts/restore-real-menu-items.mjs",
     "db:sync-menu": "node scripts/sync-menu-items.mjs",
     "postinstall": "prisma generate"

@@ -6,15 +6,7 @@ import { rebuildMenuSnapshots } from './rebuild-menu-snapshots.mjs';
 const envPath = path.resolve(process.cwd(), '.env');
 dotenv.config({ path: envPath, override: true });
 
-const R2_PLACEHOLDER_KEY = 'menu-items/pool-menu-drinks-placeholder.webp';
-
-function resolveSharedImageUrl() {
-  const r2PublicUrl = process.env.R2_PUBLIC_URL?.trim();
-  if (!r2PublicUrl) {
-    throw new Error('Missing required env var: R2_PUBLIC_URL');
-  }
-  return `${r2PublicUrl.replace(/\/$/, '')}/${R2_PLACEHOLDER_KEY}`;
-}
+import { resolveSharedImageProxyUrl } from './ensure-pool-menu-placeholder.mjs';
 
 const POOL_SECTION = {
   slug: 'pool-menu',
@@ -680,7 +672,7 @@ async function main() {
   const prisma = new PrismaClient({ datasources: { db: { url: databaseUrl } } });
 
   try {
-    const sharedImageUrl = resolveSharedImageUrl();
+    const sharedImageUrl = resolveSharedImageProxyUrl();
     const poolSection = await ensurePoolSection(prisma);
     const legacyBarMenuAction = await maybeDeactivateLegacyBarMenu(prisma, poolSection.id);
     const upsertSummary = await upsertCategoriesAndItems(prisma, poolSection.id, sharedImageUrl);

@@ -53,10 +53,14 @@ async function main() {
   const imagePath = process.argv[2];
   const hyName = process.argv[3];
   const priceArg = process.argv[4];
+  const categorySlug = process.argv[5] ?? 'bar-menu';
+  const itemSlugArg = process.argv[6];
+  const ruName = process.argv[7] ?? hyName;
+  const enName = process.argv[8] ?? hyName;
 
   if (!imagePath || !hyName || !priceArg) {
     throw new Error(
-      'Usage: node scripts/import-menu-item.mjs "<imagePath>" "<hyName>" "<priceInt>"',
+      'Usage: node scripts/import-menu-item.mjs "<imagePath>" "<hyName>" "<priceInt>" [categorySlug] [itemSlug] [ruName] [enName]',
     );
   }
 
@@ -79,7 +83,7 @@ async function main() {
   const ext = extFrom(imagePath);
   const contentType = contentTypeFromExt(ext);
 
-  const itemSlugBase = slugify(hyName) || `item-${Date.now()}`;
+  const itemSlugBase = itemSlugArg ?? slugify(hyName) ?? `item-${Date.now()}`;
   const unique = crypto.randomBytes(4).toString('hex');
   const objectKey = `menu-items/${itemSlugBase}-${Date.now()}-${unique}.${ext}`;
 
@@ -117,20 +121,39 @@ async function main() {
       },
     });
 
+    const categoryTitles = {
+      'bar-menu': {
+        hy: 'Բարի մենյու',
+        ru: 'Бар-меню',
+        en: 'Bar Menu',
+        sortOrder: 0,
+      },
+      kitchen: {
+        hy: 'Խոհանոց',
+        ru: 'Кухня',
+        en: 'Kitchen',
+        sortOrder: 1,
+      },
+    };
+    const categoryMeta = categoryTitles[categorySlug];
+    if (!categoryMeta) {
+      throw new Error(`Unsupported category slug: ${categorySlug}`);
+    }
+
     const category = await prisma.menuCategory.upsert({
       where: {
-        sectionId_slug: { sectionId: section.id, slug: 'bar-menu' },
+        sectionId_slug: { sectionId: section.id, slug: categorySlug },
       },
       update: { isActive: true },
       create: {
         sectionId: section.id,
-        slug: 'bar-menu',
+        slug: categorySlug,
         title: {
-          hy: 'Բարի մենյու',
-          ru: 'Бар-меню',
-          en: 'Bar Menu',
+          hy: categoryMeta.hy,
+          ru: categoryMeta.ru,
+          en: categoryMeta.en,
         },
-        sortOrder: 0,
+        sortOrder: categoryMeta.sortOrder,
         isActive: true,
       },
     });
@@ -141,17 +164,25 @@ async function main() {
     });
     const nextSort = (maxSort._max.sortOrder ?? 0) + 1;
 
-    const baseSlug = itemSlugBase || `item-${Date.now()}`;
-    const existing = await prisma.menuItem.count({
-      where: { categoryId: category.id, slug: { startsWith: baseSlug } },
-    });
-    const finalSlug = existing === 0 ? baseSlug : `${baseSlug}-${existing + 1}`;
+    const finalSlug = itemSlugBase || `item-${Date.now()}`;
 
-    const item = await prisma.menuItem.create({
-      data: {
+    const item = await prisma.menuItem.upsert({
+      where: {
+        categoryId_slug: {
+          categoryId: category.id,
+          slug: finalSlug,
+        },
+      },
+      update: {
+        name: { hy: hyName, ru: ruName, en: enName },
+        imageUrl,
+        price,
+        isActive: true,
+      },
+      create: {
         categoryId: category.id,
         slug: finalSlug,
-        name: { hy: hyName, ru: hyName, en: hyName },
+        name: { hy: hyName, ru: ruName, en: enName },
         imageUrl,
         price,
         sortOrder: nextSort,
@@ -167,7 +198,7 @@ async function main() {
           ok: true,
           itemId: item.id,
           slug: item.slug,
-          category: 'pool-menu/bar-menu',
+          category: `pool-menu/${categorySlug}`,
           price,
           imageUrl,
         },

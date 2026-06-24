@@ -3,6 +3,7 @@ import type { MenuCategoryPayload } from './types';
 import type { MenuItemPayload } from './types';
 import type { MenuPayload } from './types';
 import { getDemoMenu } from './demo-data';
+import { resolveMenuImageSrc } from '@/lib/r2/resolve-menu-image-src';
 
 /**
  * Returns the menu payload for the given locale.
@@ -13,23 +14,39 @@ import { getDemoMenu } from './demo-data';
  */
 export async function getMenu(locale: Locale): Promise<MenuPayload> {
   if (!process.env.DATABASE_URL) {
-    return normalizeMenuStructure(getDemoMenu(locale));
+    return resolveMenuImageUrls(normalizeMenuStructure(getDemoMenu(locale)));
   }
 
   try {
     const { prisma } = await import('@/db/client');
     const snapshot = await prisma.menuSnapshot.findUnique({ where: { locale } });
     if (snapshot?.data) {
-      return normalizeMenuStructure(snapshot.data as MenuPayload);
+      return resolveMenuImageUrls(normalizeMenuStructure(snapshot.data as MenuPayload));
     }
     // No snapshot built yet — fallback to demo
-    return normalizeMenuStructure(getDemoMenu(locale));
+    return resolveMenuImageUrls(normalizeMenuStructure(getDemoMenu(locale)));
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
       console.warn('[getMenu] DB unavailable, using demo data:', err);
     }
-    return normalizeMenuStructure(getDemoMenu(locale));
+    return resolveMenuImageUrls(normalizeMenuStructure(getDemoMenu(locale)));
   }
+}
+
+function resolveMenuImageUrls(menuPayload: MenuPayload): MenuPayload {
+  return {
+    ...menuPayload,
+    sections: menuPayload.sections.map((section) => ({
+      ...section,
+      categories: section.categories.map((category) => ({
+        ...category,
+        items: category.items.map((item) => ({
+          ...item,
+          imageUrl: item.imageUrl ? resolveMenuImageSrc(item.imageUrl) : null,
+        })),
+      })),
+    })),
+  };
 }
 
 function normalizeMenuStructure(menuPayload: MenuPayload): MenuPayload {
@@ -104,7 +121,7 @@ function getRestaurantKitchenSubcategoryTitle(itemSlug: string): string | null {
     return 'Նախուտեստներ';
   }
   if (RESTAURANT_KITCHEN_SALAD_SLUGS.has(itemSlug)) {
-    return 'Աղցաներ';
+    return 'Աղցաններ';
   }
   return 'Տաք ուտեստներ';
 }
@@ -144,6 +161,7 @@ const RESTAURANT_KITCHEN_APPETIZER_SLUGS = new Set([
   'shrimp-tempura',
   'chicken-nuggets',
   'seafood-platter',
+  'vegetable-bouquet',
 ]);
 
 const RESTAURANT_KITCHEN_SALAD_SLUGS = new Set([
@@ -153,6 +171,6 @@ const RESTAURANT_KITCHEN_SALAD_SLUGS = new Set([
   'shrimp-caesar',
   'caprese',
   'beef-salad',
-  'vegetable-bouquet',
   'thai-beef',
+  'quinoa-chicken',
 ]);

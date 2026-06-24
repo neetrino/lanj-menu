@@ -18,7 +18,7 @@ Apply to **Production**, **Preview**, and **Build** (build needs `DATABASE_URL` 
 | `R2_ACCESS_KEY_ID` | Yes | R2 API token (read access to `menu-items/*`) |
 | `R2_SECRET_ACCESS_KEY` | Yes | R2 API token secret |
 | `R2_BUCKET_NAME` | Yes | Bucket name |
-| `R2_PUBLIC_URL` | Optional | Custom public R2 domain for `next/image` remote patterns |
+| `R2_PUBLIC_URL` | Yes | Public R2 base URL; used by `next/image` to resolve proxied menu image URLs |
 | `NEXT_PUBLIC_APP_URL` | Optional | Production site URL, e.g. `https://menu.example.com` |
 
 Do not commit `.env`. Use `.env.example` as the reference list.

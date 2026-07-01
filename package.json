@@ -24,6 +24,7 @@
     "db:rewrite-image-urls": "node scripts/rewrite-image-urls.mjs",
     "db:restore-menu": "node scripts/restore-real-menu-items.mjs",
     "db:sync-menu": "node scripts/sync-menu-items.mjs",
+    "db:migrate-subcategories": "node scripts/migrate-subcategories-to-db.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {

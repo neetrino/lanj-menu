@@ -45,6 +45,8 @@ model MenuItem {
   category    MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   slug        String
   name        Json
+  /// Localized subcategory label for menu tabs, e.g. { hy, ru, en }.
+  subcategoryTitle Json?
   imageUrl    String?
   price       Int?
   sortOrder   Int          @default(0)

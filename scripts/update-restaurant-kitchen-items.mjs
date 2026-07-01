@@ -3,6 +3,10 @@ import fs from 'node:fs/promises';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import { rebuildMenuSnapshots } from './rebuild-menu-snapshots.mjs';
+import {
+  loadRestaurantKitchenSubcategoryData,
+  resolveRestaurantKitchenSubcategoryTitle,
+} from './lib/restaurant-kitchen-subcategories.mjs';
 
 const envPath = path.resolve(process.cwd(), '.env');
 dotenv.config({ path: envPath, override: true });
@@ -28,6 +32,8 @@ async function main() {
 
   const prisma = new PrismaClient({ datasources: { db: { url: databaseUrl } } });
   try {
+    const { subcategories, slugToKey } = await loadRestaurantKitchenSubcategoryData();
+
     const category = await prisma.menuCategory.findFirst({
       where: {
         slug: 'kitchen',
@@ -56,10 +62,16 @@ async function main() {
     const upserted = [];
     for (const [index, item] of catalog.entries()) {
       const existing = existingBySlug.get(item.slug);
+      const subcategoryTitle = resolveRestaurantKitchenSubcategoryTitle(
+        item.slug,
+        subcategories,
+        slugToKey,
+      );
       const data = {
         name: item.name,
         price: item.price,
         sortOrder: index,
+        subcategoryTitle,
         isActive: true,
       };
 

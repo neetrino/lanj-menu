@@ -19,6 +19,10 @@ import {
 } from '@aws-sdk/client-s3';
 import { PrismaClient } from '@prisma/client';
 import { rebuildMenuSnapshots } from './rebuild-menu-snapshots.mjs';
+import {
+  loadRestaurantKitchenSubcategoryData,
+  resolveRestaurantKitchenSubcategoryTitle,
+} from './lib/restaurant-kitchen-subcategories.mjs';
 
 const execFileAsync = promisify(execFile);
 
@@ -185,6 +189,8 @@ async function main() {
   const prisma = new PrismaClient({ datasources: { db: { url: databaseUrl } } });
 
   try {
+    const { subcategories, slugToKey } = await loadRestaurantKitchenSubcategoryData();
+
     const category = await prisma.menuCategory.findFirst({
       where: {
         slug: 'kitchen',
@@ -210,6 +216,11 @@ async function main() {
           categoryId: category.id,
           slug: item.slug,
           name: item.name,
+          subcategoryTitle: resolveRestaurantKitchenSubcategoryTitle(
+            item.slug,
+            subcategories,
+            slugToKey,
+          ),
           imageUrl: upload.proxyUrl,
           price: item.price,
           sortOrder: index,

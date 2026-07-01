@@ -1,0 +1,27 @@
+{
+  "appetizers": [
+    "appetizer-set",
+    "tomato-bruschetta",
+    "salmon-bruschetta",
+    "olives",
+    "european-cheese-board",
+    "meat-platter",
+    "fried-cheese",
+    "stuffed-vegetables",
+    "calamari-rings",
+    "shrimp-tempura",
+    "chicken-nuggets",
+    "seafood-platter",
+    "vegetable-bouquet"
+  ],
+  "salads": [
+    "lanj-salad",
+    "greek-salad",
+    "caesar-salad",
+    "shrimp-caesar",
+    "caprese",
+    "beef-salad",
+    "thai-beef",
+    "quinoa-chicken"
+  ]
+}

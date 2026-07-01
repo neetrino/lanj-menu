@@ -2,6 +2,8 @@
  * Rebuilds MenuSnapshot rows for all locales from relational menu tables.
  * Shared by seed and import scripts.
  */
+import { resolveItemCategoryTitle } from './lib/restaurant-kitchen-subcategories.mjs';
+
 export async function rebuildMenuSnapshots(prisma) {
   const sections = await prisma.menuSection.findMany({
     include: {
@@ -40,17 +42,26 @@ export async function rebuildMenuSnapshots(prisma) {
               items: category.items
                 .filter((i) => i.isActive)
                 .sort((a, b) => a.sortOrder - b.sortOrder)
-                .map((item) => ({
-                  slug: item.slug,
-                  name:
-                    item.name?.[locale] ??
-                    item.name?.hy ??
-                    item.name?.en ??
-                    Object.values(item.name ?? {})[0] ??
-                    '',
-                  imageUrl: item.imageUrl,
-                  price: item.price,
-                })),
+                .map((item) => {
+                  const payloadItem = {
+                    slug: item.slug,
+                    name:
+                      item.name?.[locale] ??
+                      item.name?.hy ??
+                      item.name?.en ??
+                      Object.values(item.name ?? {})[0] ??
+                      '',
+                    imageUrl: item.imageUrl,
+                    price: item.price,
+                  };
+
+                  const categoryTitle = resolveItemCategoryTitle(item, locale);
+                  if (categoryTitle) {
+                    payloadItem.categoryTitle = categoryTitle;
+                  }
+
+                  return payloadItem;
+                }),
             })),
         })),
     };

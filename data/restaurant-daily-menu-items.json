@@ -121,6 +121,16 @@
     }
   },
   {
+    "slug": "meat-platter",
+    "photo": "IMG_1616.JPG",
+    "price": 6000,
+    "name": {
+      "hy": "Մսի տեսականի",
+      "ru": "Мясная тарелка",
+      "en": "Meat Platter"
+    }
+  },
+  {
     "slug": "fried-cheese",
     "photo": "YPP_3272.jpg",
     "price": 2500,
